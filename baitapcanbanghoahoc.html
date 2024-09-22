@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="BioCheX.png" type="image/x-icon">
+    <title>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</title>
+    <link rel="stylesheet" href="btester.css">
+</head>
+<body>
+    <header>
+        <h1>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Trang chủ</a></li>
+            </ul>
+            <marquee behavior="alternate">
+                <marquee style="color:#ffffff; font-weight:bold" width="700px">I LOVE CHEMISTRY - HOÁ HỌC ĐƯA ĐẾN TƯƠNG LAI</marquee>
+            </marquee>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="quiz">
+            <h2>Câu hỏi</h2>
+            <form id="quiz-form">
+                <!-- Câu hỏi sẽ được hiển thị ở đây -->
+            </form>
+            <button id="next-submit-btn" onclick="submitAnswer()">Nộp bài</button>
+        </section>
+
+        <section id="question-list">
+            <h2>Danh sách câu hỏi</h2>
+            <ul id="question-navigation">
+                <!-- Số câu hỏi sẽ được thêm vào đây -->
+            </ul>
+        </section>
+
+        <section id="results" style="display: none;">
+            <h2>Kết quả</h2>
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhkNvC9P6pIqkHU2tDhRbPnV3Y36m7NdjiR5GVopADP9PkCHn7E0Mxs2grIyEZ7R66txHJFlQsEg1cNMsuubQ-h0EBUoUtQJ_nlHLc6MAPOiUeZSuDmPATHgLcFG-w3989IWawhrEwoV7bMrRSMmJQmmvcWs0Gdt7nZ2fQmBBRbdFQO7CTOO4XK9Tj7dA/s940/B%E1%BA%A3n%20sao%20c%E1%BB%A7a%20Ngh%C4%A9%20kh%C3%A1c%20%C4%91i%20(B%C3%A0i%20%C4%91%C4%83ng%20Facebook)%20(16).png" alt="Congratulations Image" id="congratulations-image">
+            <div id="score"></div>
+            <div id="correct-answers"></div>
+            <div id="incorrect-answers"></div>
+            <button onclick="restartQuiz()">Làm lại</button>
+        </section>
+    </main>
+
+    <footer>
+        <ul>
+                <p>BioCheX - Hoá Sinh trong đời sống. HVT-TNK</p>
+        </ul>
+    </footer>
+    <script>
+        // Dữ liệu về các câu hỏi và đáp án
+        const questions = [
+            {
+                question: "Câu 1: Phản ứng thuận nghịch là:",
+                answers: [
+                    { text: "Phản ứng trong đó ở cùng điều kiện, xảy ra đồng thời sự chuyển chất phản ứng thành chất sản phẩm và sự chuyển chất sản phẩm thành chất phản ứng.", correct: true },
+                    { text: "Phản ứng trong đó ở điều kiện khắc nghiệt, xảy ra đồng thời sự chuyển chất phản ứng thành chất sản phẩm và sự chuyển chất sản phẩm thành chất phản ứng.", correct: false },
+                    { text: "Phản ứng trong đó ở cùng điều kiện, xảy ra lần lượt sự chuyển chất phản ứng thành chất sản phẩm và sự chuyển chất sản phẩm thành chất phản ứng.", correct: false},
+                    { text: "Phản ứng trong đó ở điều kiện khắc nghiệt, xảy ra lần lượt sự chuyển chất phản ứng thành chất sản phẩm và sự chuyển chất sản phẩm thành chất phản ứng.", correct: false }
+                ],
+                explanation: " Phản ứng thuận nghịch là Phản ứng trong đó ở cùng điều kiện, xảy ra đồng thời sự chuyển chất phản ứng thành chất sản phẩm và sự chuyển chất sản phẩm thành chất phản ứng."
+            },
+            {
+                question: "Câu 2: Chiều từ trái sang phải trong phản ứng thuận nghịch gọi là chiều:",
+                answers: [
+                    { text: "Chiều nghịch.", correct: false },
+                    { text: "Chiều đảo.", correct: false },
+                    { text: "Chiều thuận.", correct: true},
+                    { text: "Chiều chuẩn.", correct: false }
+                ],
+                explanation: "Trong phản ứng thuận nghịch, chiều từ trái sang phải gọi là chiều thuận. Ngược lại, chiều từ phải sang trái là chiều nghịch."
+            },
+            {
+                question: "Câu 3: Cân bằng hóa học là một trạng thái của phản ứng thuận nghịch khi:",
+                answers: [
+                    { text: "Tốc độ phản ứng thuận bằng hai lần tốc độ phản ứng nghịch.", correct: false },
+                    { text: "Tốc độ phản ứng thuận bằng một nửa tốc độ phản ứng nghịch.", correct: false },
+                    { text: "Tốc độ phản ứng thuận bằng tốc độ phản ứng nghịch.", correct: true},
+                    { text: "Tốc độ phản ứng thuận bằng k lần tốc độ phản ứng nghịch.", correct: false }
+                ],
+                explanation: "Cân bằng hóa học là trạng thái của phản ứng khi tốc độ phản ứng thuận bằng tốc độ phản ứng nghịch."
+            },
+            {
+                question: "Câu 4: Hằng số Kc của một phản ứng phụ thuộc vào yếu tố nào sau đây? ",
+                answers: [
+                    { text: "Nồng độ.", correct: false },
+                    { text: "Nhiệt độ.", correct: true },
+                    { text: "Áp suất.", correct: false},
+                    { text: "Chất xúc tác.", correct: false }
+                ],
+                explanation: "Hằng số KC của một phản ứng phụ thuộc vào nhiệt độ."
+            },
+            {
+                question: "Câu 5: Nhận định nào dưới đây là đúng? ",
+                answers: [
+                    { text: "Bất cứ phản ứng nào cũng phải đạt đến trạng thái cân bằng hóa học.", correct: false },
+                    { text: "Chỉ có những phản ứng thuận nghịch mới có trạng thái cân bằng hóa học.", correct: true },
+                    { text: "Khi phản ứng thuận nghịch ở trạng thái cân bằng thì phản ứng dừng lại.", correct: false},
+                    { text: "Ở trạng thái cân bằng, khối lượng các chất ở hai vế của phương trình phải bằng nhau.", correct: false }
+                ],
+                explanation: "Trạng thái cân bằng hóa học là trạng thái tốc độ phản ứng thuận bằng tốc độ phản ứng nghịch => chỉ có phản ứng thuận nghịch mới có trạng thái cân bằng hóa học."
+            },
+            {
+                question: "Câu 6: Nếu một phản ứng thuận nghịch có hằng số cân bằng Kc = 3,2.10^8 thì phản ứng xảy ra thuận lợi hơn là:",
+                answers: [
+                    { text: "Không xác định được.", correct: false },
+                    { text: "Phản ứng nghịch", correct: false },
+                    { text: "Bằng nhau.", correct: false},
+                    { text: "Phản ứng thuận.", correct: true }
+                ],
+                explanation: "Hằng số cân bằng Kc cho biết mức độ cân bằng của phản ứng, Kc càng lớn thì phản ứng thuận xảy ra càng mạnh mẽ hơn. Trong câu này, Kc = 3,2.10^8 cho thấy phản ứng thuận xảy ra thuận lợi hơn."
+            },
+            {
+                question: "Câu 7: Khi tăng áp suất, phản ứng nào không ảnh hưởng tới cân bằng:",
+                answers: [
+                    { text: "H2 + Cl2 ⮂ 2HCl ", correct: true },
+                    { text: "N2 + 3H2 ⮂ 2NH3", correct: false },
+                    { text: "2SO2 + O2 ⮂ 2SO3", correct: false},
+                    { text: "2CO + O2 ⮂ 2CO2", correct: false }
+                ],
+                explanation: "H2 + Cl2 ⮂ 2HCl trong trường hợp này, tổng số mol 2 vế bằng nhau nên áp suất không ảnh hưởng tới trạng thái cân bằng."
+            },
+            {
+                question: "Câu 8: cho phản ứng N2(g) + O2(g) ⮂ 2NO(g) (ΔrH°298 > 0), Hãy cho biết những yếu tố nào sau đây ảnh hưởng đến sự chuyển dịch cân bằng hoá học trên? ",
+                answers: [
+                    { text: "Áp suất và nồng độ.", correct: false },
+                    { text: "Nhiệt độ và nồng độ.", correct: true },
+                    { text: "Nồng độ và chất xúc tác.", correct: false},
+                    { text: "Chất xúc tác và nhiệt độ.", correct: false }
+                ],
+                explanation: " chất xúc tác không ảnh hưởng đến sự chuyển dịch cân bằng hóa học, phản ứng trên có số mol 2 vế bằng nhau => áp suất không ảnh hưởng đến chuyển dịch."
+            },
+            {
+                question: "Câu 9: Cho cân bằng hóa học: 2SO2 + O2 ⮂ 2SO3. Khi tăng nhiệt độ thì tỉ khối của hỗn hợp khí so với H2 giảm đi, Phát biểu nào sau đây đúng khi nói về cân bằng hóa học này?",
+                answers: [
+                    { text: "Phản ứng thuận thu nhiệt, cân bằng dịch chuyển theo chiều nghịch khi tăng nhiệt độ.", correct: false },
+                    { text: " Phản ứng thuận tỏa nhiệt, cân bằng chuyển dịch theo chiều nghịch khi tăng nhiệt độ.", correct: true },
+                    { text: "Phản ứng nghịch tỏa nhiệt, cân bằng chuyển dịch theo chiều thuận khi tăng nhiệt độ.", correct: false},
+                    { text: "Phản ứng nghịch thu nhiệt, cân bằng chuyển dịch theo chiều thuận khi tăng nhiệt độ.", correct: false }
+                ],
+                explanation: "Đề bài cho biết tỉ khối của hỗn hợp khí so với H2 giảm khi tăng nhiệt độ, tức là mốc so tăng, hay nói cách khác, số mol khí tăng lên (do mồle & định luật Avogadro). Điều này có thể suy ra từ phương trình cân bằng khi số mol khí phía phản ứng thuận nhiều hơn phản ứng nghịch (3>2), vậy tăng nhiệt độ khiến cân bằng dịch chuyển về phía phản ứng thuận. Nếu khi tăng nhiệt độ, cân bằng dịch chuyển về chiều thuận nghĩa là phản ứng thuận thu hấp thụ nhiệt tác thụ, ngược lại, cái mà phản ứng thuận tỏa nhiệt. Vậy đáp án là D. Phản ứng thuận tỏa nhiệt, cân bằng chuyển dịch theo chiều nghịch khi tăng nhiệt độ."
+            },
+            {
+                question: "Câu 10: Cho cân bằng hóa học sau trong bình kín: 2NO2(g) ⮂ N2O4(g) (NO2 màu nâu đỏ, N2O4 không màu). Biết khi hạ nhiệt độ của bình thì màu nâu đỏ nhạt dần. Phản ứng thuận có:",
+                answers: [
+                    { text: "ΔrH°298 > 0, phản ứng tỏa nhiệt", correct: false },
+                    { text: "ΔrH°298 < 0, phản ứng tỏa nhiệt", correct: true },
+                    { text: "ΔrH°298 > 0, phản ứng thu nhiệt", correct: false},
+                    { text: "ΔrH°298 < 0, phản ứng thu nhiệt", correct: false }
+                ],
+                explanation: "khi hạ nhiệt độ thì màu nâu đỏ nhạt dần => phản ứng theo chiều thuận và tỏa nhiệt, mà ΔrH°298 > 0 là thu nhiệt, ΔrH°298 < 0 là tỏa nhiệt"
+            },
+            {
+                question: "Câu 11: xét cân bằng: N2(g) + 3H2(g) ⮂ 2NH3(g), biểu thức hằng số cân bằng của phản ứng là :",
+                answers: [
+                    { text: "[N2].[H2]/[NH3]", correct: false },
+                    { text: "[NH3]^2 / [N2].[H2]^2", correct: false },
+                    { text: "[NH3]/[N2].[H2]", correct: false},
+                    { text: " [NH3]^2 / [N2].[H2]^3", correct: true }
+                ],
+                explanation: "Kc = [NH3]^2 / [N2].[H2]^3"
+            },
+            {
+                question: "Câu 12: Cân bằng hóa học là cân bằng: ",
+                answers: [
+                    { text: "Động", correct: true },
+                    { text: "Tĩnh", correct: false },
+                    { text: "Ổn định", correct: false},
+                    { text: "Đều", correct: false }
+                ],
+                explanation: "Cân bằng hóa học là cân bằng động"
+            },
+            {
+                question: "Câu 13: Nồng độ của các chất trong biểu thức hằng số cân bằng là nồng độ:",
+                answers: [
+                    { text: "Phần nghìn", correct: false },
+                    { text: "Mol", correct: true },
+                    { text: "Phần trăm", correct: false},
+                    { text: "Đương lượng", correct: false }
+                ],
+                explanation: "Nồng độ mol"
+            },
+            {
+                question: "Câu 14: Phản ứng : 2SO2(g) + O2(g) ⮂ 2SO3(g) (ΔrH°298 < 0): Khi giảm nhiệt độ và khi giảm áp suất thì cân bằng của phản ứng trên chuyển dịch tương ứng là :",
+                answers: [
+                    { text: "Thuận và thuận.", correct: false },
+                    { text: "Thuận và nghịch.", correct: true },
+                    { text: "Nghịch và nghịch.", correct: false},
+                    { text: "Nghịch và thuận.", correct: false }
+                ],
+                explanation: "Phản ứng có ΔrH°298 < 0 ( chiều thuận) => khi giảm nhiệt độ thì cân bằng chuyển dịch theo chiều thuận. đồng thời tổng số mol khí của chất ban đầu nhiều hơn tổng số mol khí của sản phẩn nên khi giảm áp suất => chiều nghịch "
+            },
+            {
+                question: "Câu 15:Cho phản ứng: A(g) + B(g) ⮂ C(g) + D(g)  trạng thái cân bằng. Ở nhiệt độ và áp suất không đổi, nguyên nhân nào sau đây làm nồng độ khí D tăng ?",
+                answers: [
+                    { text: "Sự giảm nồng độ khí C", correct: true },
+                    { text: "Sự giảm nồng độ khí B", correct: false },
+                    { text: "Sự giảm nồng độ khí A", correct: false},
+                    { text: "Sự tăng nồng độ khí C", correct: false }
+                ],
+                explanation: "Việc giảm nồng đồ chất sản phẩm làm cân bằng chuyển dịch theo chiều thuận"
+            },
+            {
+                question: "Câu 16: Nếu một phản ứng thuận nghịch như sau:A + B ⮂ 2C có Kc là 1 thì ở trạng thái cân bằng, nồng độ tổng các chất ban đầu và các chất sản phẩm: ",
+                answers: [
+                    { text: "Bằng nhau.", correct: true },
+                    { text: "Ban đầu nhiều hơn.", correct: false },
+                    { text: "Sản phẩm nhiều hơn.", correct: false},
+                    { text: "Không xác định được.", correct: false }
+                ],
+                explanation: "Kc = [C]^2/[A].[B]=1 => [C]^2 = [A].[B] => tổng nồng độ các chất ban đầu bằng nồng độ các chất sản phẩm."
+            },
+            {
+                question: "Câu 17: Trong một bình kín có cân bằng hóa học sau: 2NO2 ⮂ N2O4. Tỉ khối hơi của hỗn hợp khí trong bình so với H2 ở nhiệt độ T1 = 27,6 và nhiệt độ T2 = 34,5. Biết T1>T2 Phát biểu nào sau đây về cân bằng trên là đúng?",
+                answers: [
+                    { text: "Phản ứng thuận là phản ứng tỏa nhiệt.", correct: true },
+                    { text: "Khi tăng nhiệt độ, áp suất chung của hệ cân bằng giảm.", correct: false },
+                    { text: "Phản ứng nghịch là phản ứng tỏa nhiệt.", correct: false},
+                    { text: "Khi giảm nhiệt độ, áp suất chung của hệ cân bằng tăng.", correct: false }
+                ],
+                explanation: "tỉ khối T1 = M(khí ban đầu)/2 <T2 = M(khí sau)/2. mà T1>T2 => nhiệt độ giảm, tỉ khối tăng => M(khí) tăng => chiều thuận, tỏa nhiệt."
+            },
+            {
+                question: "Câu 18: Quá trình sản xuất NH3 trong công nghiệp dựa trên phản ứng: N2(g) +3H2(g) ⮂ 2NH3(g), ΔrH°298 = -92 kj. nồng độ NH3 trong hỗn hợp lúc cân bằng lớn nhất khi:",
+                answers: [
+                    { text: "nhiệt độ và áp suất đều giảm", correct: false },
+                    { text: "nhiệt độ giảm, áp suất tăng", correct: true },
+                    { text: "nhiệt độ và áp suất đều tăng", correct: false},
+                    { text: "nhiệt độ tăng, áp suất giảm", correct: false }
+                ],
+                explanation: " nồng độ NH3 trong hỗn hợp lúc cân bằng lớn nhất => cân bằng chuyển dịch theo chiều thuận => nhiệt độ giảm và áp suất tăng"
+            },
+            {
+                question: "Câu 19:xét cân bằng N2O4(g)⮂2NO2(g) ở 25 độ C. khi chuyển dịch sang một trạng thái cân bằng mới nếu nồng độ N2O4 tăng lên 9 lần thì nòng độ của NO2: ",
+                answers: [
+                    { text: "tăng 3 lần", correct: true },
+                    { text: "giảm 3 lần", correct: false },
+                    { text: "tăng 4,5 lần", correct: false},
+                    { text: "giảm 4,5 lần", correct: false }
+                ],
+                explanation: "Kc = [NO2]^2/[N2O4] => [NO2] = căn Kc.[N2O4] = a => [NO2]= căn Kc.9[N2O4]= 3a"
+            },
+            {
+                question: "Câu 20: đối với một hệ ở trạng thái cân bằng, nếu thêm chất xúc tác thì",
+                answers: [
+                    { text: "làm tăng tốc độ phản ứng thuận, nghịch như nhau", correct: true },
+                    { text: "chỉ làm tăng tốc độ phản ứng thuận", correct: false },
+                    { text: "chỉ làm tăng tốc độ phản ứg nghịch", correct: false},
+                    { text: "không làm tăng tốc độ phản ứng thuận và nghịch", correct: false }
+                ],
+                explanation: "đối với một hệ ở trạng thái cân bằng, nếu thêm chất xúc tác thì làm tăng tốc độ phản ứng thuận, nghịch như nhau"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const userAnswers = [];
+
+        const quizForm = document.getElementById('quiz-form');
+        const resultsSection = document.getElementById('results');
+        const scoreDisplay = document.getElementById('score');
+        const correctAnswersDisplay = document.getElementById('correct-answers');
+        const incorrectAnswersDisplay = document.getElementById('incorrect-answers');
+        const nextSubmitBtn = document.getElementById('next-submit-btn');
+        const questionNavigation = document.getElementById('question-navigation');
+
+        // Hàm để bắt đầu trò chơi
+        function startQuiz() {
+            showQuestion();
+            createQuestionNavigation();
+        }
+
+        // Hàm để hiển thị câu hỏi hiện tại
+        function showQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            quizForm.innerHTML = `
+                <h2>${currentQuestion.question}</h2>
+                ${currentQuestion.answers.map((answer, index) => `
+                    <p><input type="radio" id="option${index + 1}" name="question" value="${answer.text}">
+                    <label for="option${index + 1}">${answer.text}</label></p>
+                `).join('')}`;
+
+            if (currentQuestionIndex === questions.length - 1) {
+                nextSubmitBtn.textContent = "Nộp bài";
+            } else {
+                nextSubmitBtn.textContent = "Tiếp theo";
+            }
+
+            updateQuestionNavigation();
+        }
+
+        // Hàm để kiểm tra câu trả lời và chuyển sang câu hỏi tiếp theo
+        function submitAnswer() {
+            const selectedAnswer = document.querySelector('input[name="question"]:checked');
+            if (selectedAnswer) {
+                const currentQuestion = questions[currentQuestionIndex];
+                userAnswers[currentQuestionIndex] = selectedAnswer.value;
+
+                if (currentQuestion.answers.find(answer => answer.text === selectedAnswer.value && answer.correct)) {
+                    score++;
+                }
+
+                currentQuestionIndex++;
+
+                if (currentQuestionIndex < questions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            } else {
+                alert('Vui lòng chọn một đáp án.');
+            }
+        }
+
+        // Hàm để hiển thị kết quả
+        function showResults() {
+    quizForm.style.display = 'none';
+    resultsSection.style.display = 'block';
+
+    scoreDisplay.textContent = `Bạn đã trả lời đúng ${score}/${questions.length} câu.`;
+    
+    correctAnswersDisplay.innerHTML = '<h3>Các câu trả lời đúng:</h3>' + questions.map((question, index) => {
+        const correctAnswer = question.answers.find(answer => answer.correct).text;
+        return `<p><strong>${index + 1}. ${question.question}</strong><br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+    }).join('');
+    
+    incorrectAnswersDisplay.innerHTML = '<h3>Các câu trả lời sai:</h3>' + questions.map((question, index) => {
+        if (!question.answers.find(answer => answer.text === userAnswers[index] && answer.correct)) {
+            const correctAnswer = question.answers.find(answer => answer.correct).text;
+            return `<p style="color: red;"><strong>${index + 1}. ${question.question}</strong><br>Đáp án của bạn: ${userAnswers[index]}<br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+        }
+        return '';
+    }).join('');
+}
+
+
+        // Hàm để tạo danh sách câu hỏi
+        function createQuestionNavigation() {
+            questionNavigation.innerHTML = '';
+            for (let i = 0; i < questions.length; i++) {
+                const questionLink = document.createElement('li');
+                questionLink.textContent = i + 1;
+                questionLink.onclick = () => goToQuestion(i);
+                questionNavigation.appendChild(questionLink);
+            }
+        }
+
+        // Hàm để cập nhật danh sách câu hỏi
+        function updateQuestionNavigation() {
+            const questionLinks = questionNavigation.children;
+            for (let i = 0; i < questionLinks.length; i++) {
+                if (userAnswers[i] !== undefined) {
+                    questionLinks[i].style.backgroundColor = 'green';
+                    questionLinks[i].style.color = 'white';
+                } else {
+                    questionLinks[i].style.backgroundColor = 'transparent';
+                    questionLinks[i].style.color = 'black';
+                }
+            }
+        }
+
+        // Hàm để chuyển đến câu hỏi cụ thể
+        function goToQuestion(index) {
+            currentQuestionIndex = index;
+            showQuestion();
+        }
+
+        // Hàm để làm lại bài kiểm tra
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers.length = 0;
+            quizForm.style.display = 'block';
+            resultsSection.style.display = 'none';
+            startQuiz();
+        }
+
+        // Bắt đầu trò chơi
+        startQuiz();
+    </script>
+</body>
+</html>

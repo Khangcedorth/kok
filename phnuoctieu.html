@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="BioCheX.png" type="image/x-icon">
+    <title>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</title>
+    <link rel="stylesheet" href="phnuoctieu.css">
+</head>
+
+<body>
+    <audio id="Audio" autoplay>
+        <source src="x.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        window.onload = function() {
+            const audio = document.getElementById('Audio');
+            audio.play().catch(function(error) {
+                console.log("Tự động phát bị chặn bởi trình duyệt:", error);
+            });
+        };
+    </script>
+    <section>
+        <img id="chemistry-icon" src="BioCheX.png" alt="Icon Hoá Học">
+        <img id="righticon" src="iconindex.PNG" alt="Icon Hoá Học">
+        <div class="center-text">
+            <h1 id="first">BioCheX - Hoá Sinh trong đời sống</h1>
+            <marquee behavior="alternate">
+                <marquee style="color:#e60b0b; font-weight:bold" width="700px">BIOCHEX - HOÁ SINH TRONG ĐỜI SỐNG</marquee>
+            </marquee>
+        </div>
+        <div class="cus">
+            <label for="gender">Chọn trạng thái cơ thể hiện tại (theo giới tính sinh học):</label>
+            <select id="gender">
+                <option value="male">Nam(độ tuổi trưởng thành)</option>
+                <option value="female">Nữ(độ tuổi trưởng thành)</option>
+                <option value="pregnant">Nữ đang trong giai đoạn mang thai</option>
+                <option value="child">Trẻ em</option>
+            </select>
+            <div>
+                <label for="inputValue">Nhập độ pH trong nước tiểu mà bạn mới thu được:</label>
+                <input type="number" id="inputValue">
+                <button onclick="processInput()">Kiểm tra</button>
+                <button onclick="startRecognition()">Sử dụng giọng nói</button>
+            </div>
+            <p id="result">Kết quả độ pH trong nước tiểu thuộc môi trường: </p>
+            <p id="k">Tình trạng nước tiểu dựa trên độ pH</p>
+            <p id="md">Mức độ nghiêm trọng của độ pH:</p>
+            <p id="bp">Các triệu chứng có khả năng mắc phải:</p>
+            <p id="neutralize">Phương pháp điều trị cho các trường hợp nhẹ: </p>
+            <div class="hidden-content">
+                <p class="tienhanh">Cách tiến hành lấy mẫu thử: Thử nghiệm giấy quỳ: Nhúng mảnh giấy quỳ trong mẫu nước tiểu. Sau một khoảng thời gian, giấy quỳ sẽ thay đổi màu sắc cho kết quả nước tiểu có tính axit hoặc kiềm. Màu sắc cũng có thể thay đổi nếu các chất khác chẳng hạn như glucose, bạch cầu, bilirubin hoặc protein, có trong nước tiểu. Để chính xác hơn, sẽ có hệ thống máy phân tích ra giá trị pH tức độ axit hoặc kiềm được lượng giá ở con số</p>
+            </div>
+            <div>
+                <h2>Lịch sử kết quả</h2>
+                <ul id="history"></ul>
+            </div>
+            <img src="https://i.ex-cdn.com/aloxetnghiem.vn/files/content/2022/09/15/chi-so-ph-trong-nuoc-tieu--do-ph-trong-nuoc-tieu-1637.jpeg" alt="Hình ảnh" id="image">
+        </div>
+        <audio id="introAudio">
+            <source src="pH.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <script>
+            const introAudio = document.getElementById('introAudio');
+            let isPlaying = false;
+    
+            document.addEventListener('keydown', function(event) {
+                if (event.ctrlKey) {
+                    if (isPlaying) {
+                        introAudio.pause();
+                        introAudio.currentTime = 0; // Optional: Reset to start
+                    } else {
+                        introAudio.play();
+                    }
+                    isPlaying = !isPlaying;
+                }
+            });
+        </script>
+        <script>
+            function playSound(audioFile) {
+            const audio = new Audio(audioFile);
+            audio.play();
+        }
+            function processInput() {
+                // Lấy giá trị từ ô nhập
+                var n = parseFloat(document.getElementById("inputValue").value);
+                var gender = document.getElementById("gender").value;
+                // Thực hiện kiểm tra và hiển thị kết quả
+                var resultElement = document.getElementById("result");
+                var kElement = document.getElementById("k");
+                var bpElement = document.getElementById("bp");
+                var mdElement = document.getElementById("md")
+                var neutralizeElement = document.getElementById("neutralize");
+                var imageElement = document.getElementById("image");
+
+                var resultText = "";
+
+                if (gender == "male" || gender == "female") {
+                    if (n > 8) {
+                        resultText = "Kết quả độ pH trong nước tiểu thuộc môi trường: kiềm mạnh";
+                        resultElement.innerHTML = resultText;
+                        kElement.innerHTML = "Tình trạng nước tiểu dựa trên độ pH: nước tiểu có tính kiềm mạnh";
+                        mdElement.innerHTML = "Mức độ cao hơn mức bình thường";
+                        bpElement.innerHTML = "Các triệu chứng có khả năng mắc phải: sỏi thận, suy thận mãn, rối loạn chức năng thận, nhiễm trùng đường tiết niệu, nôn nhiều làm thay đổi nồng độ các ion trong máu ảnh hưởng đến giá trị pH này.";
+                        neutralizeElement.innerHTML = "Phương pháp điều trị cho các trường hợp nhẹ: Uống đủ nước, ăn nhiều rau xanh và trái cây mỗi ngày. Tránh ăn thực phẩm có tính kiềm cao.";
+                        imageElement.src = "https://www.vinmec.com/s3-images/20210320_082819_761077_thuc-pham-co-tinh-axi.max-800x800.jpg";
+                        playSound('nam8.mp3');
+                    } else if (n >= 6.5 && n <= 8) {
+                        resultText = "Kết quả độ pH trong nước tiểu thuộc môi trường: trung tính";
+                        resultElement.innerHTML = resultText;
+                        mdElement.innerHTML = "Mức độ ổn định";
+                        kElement.innerHTML = "Tình trạng nước tiểu dựa trên độ pH: nước tiểu tốt, thận tốt";
+                        neutralizeElement.innerHTML = "Các triệu chứng có nguy cơ mắc phải: thận tốt, cần chú ý đến chế độ ăn để duy trì trạng thái hiện tại.";
+                        imageElement.src = "https://duyendangviet.vn/wp-content/uploads/2019/10/loi-ich-cua-viec-an-uong-hop-ly.png";
+                        playSound('tt.mp3');
+                    } else {
+                        resultText = "Kết quả độ pH trong nước tiểu thuộc môi trường: axit";
+                        resultElement.innerHTML = resultText;
+                        kElement.innerHTML = "Tình trạng nước tiểu dựa trên độ pH: nước tiểu có tính axit cao";
+                        bpElement.innerHTML = "Các triệu chứng có nguy cơ mắc phải: nhiễm trùng đường tiết niệu, sỏi thận, suy thận mãn.";
+                        playSound();
+                        if (n < 4.5) {
+                            mdElement.innerHTML = "Mức độ: nghiêm trọng";
+                            neutralizeElement.innerHTML = "Phương pháp điều trị cho các trường hợp nặng: Cần đến ngay cơ sở y tế gần nhất.";
+                            imageElement.src = "https://hongngochospital.vn/wp-content/uploads/2013/11/suy-than-man-2.jpg";
+                            playSound('nt.mp3');
+                        } else {
+                            mdElement.innerHTML = "Mức độ: thấp, có thể điều trị tại nhà";
+                            neutralizeElement.innerHTML = "Phương pháp điều trị cho các trường hợp nhẹ: Ăn nhiều thực phẩm có tính kiềm để trung hòa axit trong cơ thể, uống nhiều nước, ăn rau xanh.";
+                            imageElement.src = "https://mitsubishicleansui.com.vn/wp-content/uploads/2021/06/thuc_pham_kiem-1024x576.jpg";
+                            playSound('nhẹ.mp3');
+                        }
+                    }
+                } else if (gender == "pregnant") {
+                    if (n > 8) {
+                        resultText = "Kết quả độ pH trong nước tiểu thuộc môi trường: kiềm mạnh";
+                        resultElement.innerHTML = resultText;
+                        mdElement.innerHTML = "Mức độ: cao";
+                        kElement.innerHTML = "Tình trạng nước tiểu dựa trên độ pH: nước tiểu có tính kiềm hoá không tốt, gây ảnh hưởng xấu đến sức khoẻ của mẹ và bé";
+                        bpElement.innerHTML = "Các triệu chứng có nguy cơ mắc phải: viêm bàng quang, viêm bể thận";
+                        imageElement.src = "https://www.vinmec.com/s3-images/20210320_082819_761077_thuc-pham-co-tinh-axi.max-800x800.jpg";
+                        playSound('nam8.mp3');
+                    } else if (n >= 5.5 && n <= 8) {
+                        resultText = "Kết quả độ pH trong nước tiểu thuộc môi trường: trung tính";
+                        resultElement.innerHTML = resultText;
+                        mdElement.innerHTML = "Mức độ: ổn";
+                        kElement.innerHTML = "Tình trạng nước tiểu dựa trên độ pH: Nước tiểu hiện tại đang duy trì ở mức ổn định";
+                        bpElement.innerHTML = "Cần cố gắng duy trì chế độ ăn hợp lí để giữ vững độ pH ổn định này";
+                        imageElement.src = "https://png.pngtree.com/png-clipart/20230120/ourlarge/pngtree-good-job-in-bubble-icon-handwriting-png-image_6565045.png";
+                        playSound('tt.mp3');
+                    } else {
+                        resultText = "Kết quả độ pH trong nước tiểu thuộc môi trường: axit";
+                        resultElement.innerHTML = resultText;
+                        mdElement.innerHTML = "Mức độ: cao";
+                        kElement.innerHTML  = "Tình trạng nước tiểu dựa vào độ pH: nước tiểu có tính axit cao, là dấu hiệu báo động nguy hiểm cho mẹ và bé";
+                        bpElement.innerHTML = "Xử lí sơ cứu: uống nước kiềm, giữ bình tĩnh. Đưa đến cơ quan y tế gần nhất khẩn cấp.";
+                        imageElement.src ="https://png.pngtree.com/png-clipart/20210115/ourlarge/pngtree-alarm-bell-in-danger-clipart-png-image_2740611.png";
+                        playSound('nt.mp3');
+                    }
+                } else if (gender == "child") {
+                    if (n > 8) {
+                        resultText = "Kết quả độ pH trong nước tiểu thuộc môi trường: kiềm mạnh";
+                        resultElement.innerHTML = resultText;
+                        mdElement.innerHTML = "Mức độ: cao";
+                        kElement.innerHTML = "Tình trạng nước tiểu dựa trên độ pH: nước tiểu có tính kiềm mạnh không tốt, cần chú ý đến chế độ ăn uống của trẻ";
+                        bpElement.innerHTML = "Các triệu chứng có nguy cơ mắc phải: nhiễm trùng đường tiết niệu, rối loạn tiêu hóa";
+                        neutralizeElement.innerHTML = "Phương pháp điều trị cho các trường hợp nhẹ: Cung cấp đủ nước, bổ sung trái cây và rau xanh, hạn chế thực phẩm có tính kiềm cao.";
+                        imageElement.src = "https://www.vinmec.com/s3-images/20210320_082819_761077_thuc-pham-co-tinh-axi.max-800x800.jpg";
+                        playSound('nam8.mp3');
+                    } else if (n >= 5.5 && n <= 8) {
+                        resultText = "Kết quả độ pH trong nước tiểu thuộc môi trường: trung tính";
+                        resultElement.innerHTML = resultText;
+                        mdElement.innerHTML = "Mức độ: ổn";
+                        kElement.innerHTML = "Tình trạng nước tiểu dựa trên độ pH: nước tiểu tốt, không có vấn đề nghiêm trọng";
+                        bpElement.innerHTML = "Duy trì chế độ ăn uống và sinh hoạt lành mạnh để giữ vững độ pH này.";
+                        imageElement.src = "https://png.pngtree.com/png-clipart/20230120/ourlarge/pngtree-good-job-in-bubble-icon-handwriting-png-image_6565045.png";
+                        playSound('tt.mp3');
+                    } else {
+                        resultText = "Kết quả độ pH trong nước tiểu thuộc môi trường: axit";
+                        resultElement.innerHTML = resultText;
+                        mdElement.innerHTML = "Mức độ: cao";
+                        kElement.innerHTML = "Tình trạng nước tiểu dựa vào độ pH: nước tiểu có tính axit cao, cần chú ý đến sức khỏe của trẻ";
+                        bpElement.innerHTML = "Xử lí sơ cứu: uống nước kiềm, bổ sung thực phẩm có tính kiềm nhẹ, kiểm tra tại cơ sở y tế nếu cần.";
+                        imageElement.src ="https://png.pngtree.com/png-clipart/20210115/ourlarge/pngtree-alarm-bell-in-danger-clipart-png-image_2740611.png";
+                        playSound('teacid.mp3');
+                    }
+                }
+                // Lưu kết quả vào LocalStorage
+                saveToLocalStorage(resultText, gender, n);
+                displayHistory();
+            }
+
+            function saveToLocalStorage(resultText, gender, pHValue) {
+                var history = JSON.parse(localStorage.getItem('history')) || [];
+                var entry = {
+                    result: resultText,
+                    gender: gender,
+                    pH: pHValue,
+                    timestamp: new Date().toLocaleString()
+                };
+                history.push(entry);
+                localStorage.setItem('history', JSON.stringify(history));
+            }
+
+            function displayHistory() {
+                var history = JSON.parse(localStorage.getItem('history')) || [];
+                var historyList = document.getElementById('history');
+                historyList.innerHTML = '';
+                history.forEach(function(entry) {
+                    var listItem = document.createElement('li');
+                    listItem.textContent = `${entry.timestamp} - ${entry.gender}: ${entry.pH} (${entry.result})`;
+                    historyList.appendChild(listItem);
+                });
+            }
+
+            function startRecognition() {
+                if (!('webkitSpeechRecognition' in window)) {
+                    alert("Trình duyệt của bạn không hỗ trợ tính năng nhận dạng giọng nói. Vui lòng thử lại với trình duyệt khác.");
+                    return;
+                }
+                var recognition = new webkitSpeechRecognition();
+                recognition.lang = 'vi-VN';
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.start();
+
+                recognition.onresult = function(event) {
+                    var transcript = event.results[0][0].transcript.toLowerCase();
+                    console.log("Transcript: " + transcript);
+                    var gender = document.getElementById("gender");
+                    var inputValue = document.getElementById("inputValue");
+
+                    if (transcript.includes("nam")) {
+                        gender.value = "male";
+                    }
+                    else if (transcript.includes("nữ")) {
+                        gender.value = "female";
+                    } else if (transcript.includes("mang thai")) {
+                        gender.value = "pregnant";
+                    }
+                    else if (transcript.includes("trẻ")) {
+                        gender.value = "child";
+                    }
+
+                    var pHMatch = transcript.match(/\d+(\.\d+)?/);
+                    if (pHMatch) {
+                        inputValue.value = pHMatch[0];
+                    }
+
+                    processInput();
+                };
+
+                recognition.onerror = function(event) {
+                    console.error("Recognition error: ", event);
+                    alert("Đã xảy ra lỗi trong quá trình nhận dạng giọng nói. Vui lòng thử lại.");
+                };
+
+                recognition.onend = function() {
+                    console.log("Recognition ended.");
+                };
+            }
+
+            // Sự kiện kích hoạt giọng nói khi nhấn phím Esc
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    startRecognition();
+                }
+            });
+
+            // Hiển thị lịch sử khi tải trang
+            window.onload = function() {
+                displayHistory();
+            };
+        </script>
+    </section>
+    <footer>
+        <p>&copy; KOK - Cùng bạn tìm hiểu thế giới bằng các thuật toán hoá học. HVT-TNK</p>
+    </footer>
+</body>
+
+</html>

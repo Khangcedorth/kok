@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="BioCheX.png" type="image/x-icon">
+    <title>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</title>
+    <link rel="stylesheet" href="btester.css">
+</head>
+<body>
+    <header>
+        <h1>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Trang chủ</a></li>
+            </ul>
+            <marquee behavior="alternate">
+                <marquee style="color:#ffffff; font-weight:bold" width="700px">I LOVE CHEMISTRY - HOÁ HỌC ĐƯA ĐẾN TƯƠNG LAI</marquee>
+            </marquee>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="quiz">
+            <h2>Câu hỏi</h2>
+            <form id="quiz-form">
+                <!-- Câu hỏi sẽ được hiển thị ở đây -->
+            </form>
+            <button id="next-submit-btn" onclick="submitAnswer()">Nộp bài</button>
+        </section>
+
+        <section id="question-list">
+            <h2>Danh sách câu hỏi</h2>
+            <ul id="question-navigation">
+                <!-- Số câu hỏi sẽ được thêm vào đây -->
+            </ul>
+        </section>
+
+        <section id="results" style="display: none;">
+            <h2>Kết quả</h2>
+            <div id="score"></div>
+            <div id="correct-answers"></div>
+            <div id="incorrect-answers"></div>
+            <button onclick="restartQuiz()">Làm lại</button>
+        </section>
+    </main>
+
+    <footer>
+        <ul>
+                <p>BioCheX - Hoá Sinh trong đời sống. HVT-TNK</p>
+        </ul>
+    </footer>
+    <script>
+        // Dữ liệu về các câu hỏi và đáp án
+        const questions = [
+            {
+                question: "Câu 1: Trong các chất sau có mấy chất là ester: CH3COOC2H5, CH3COOH, HCOOCH3, C2H2, C2H3COOC2H5",
+                answers: [
+                    { text: "3", correct: true },
+                    { text: "4", correct: false },
+                    { text: "2", correct: false},
+                    { text: "5", correct: false }
+                ]
+            },
+            {
+                question: "Câu 2: Khái niệm của ester?",
+                answers: [
+                    { text: "Khi thay thế nhóm -CO của carbonxylic acid bằng nhóm -OR với R là hydrocarbon thu được ester", correct: false },
+                    { text: "Khi thay thế nhóm -OH ở nhóm carborxyl COOH của carbonxylic acid bằng nhóm -OR với R là hydrocarbon thu được ester", correct: true },
+                    { text: "Khi thay thế nhóm -OH ở nhóm carborxyl COOH của carbonxylic acid bằng nhóm -OR với R là dẫn xuất hydrocarbon thu được ester", correct: false},
+                    { text: "Khi thay thế nhóm -OH ở phan tử alcohol bằng nhóm COOH của carbonxylic acid thu được ester", correct: false }
+                ]
+            },
+            {
+                question: "Câu 3: Sắp xếp nhiệt độ nóng chảy của dãy chất theo chiều tăng dần sau: (1)CH3COOH, (2)C2H5OH, (3)CH3COOC2H5?",
+                answers: [
+                    { text: "(3)<(2)<(1)", correct: true },
+                    { text: "(3)<(1)<(2)", correct: false },
+                    { text: "(2)<(1)<(3)", correct: false},
+                    { text: "(1)<(2)<(3)", correct: false }
+                ]
+            },
+            {
+                question: "Câu 4: Số đồng phân đơn chức ứng với công thức C4H8O2?",
+                answers: [
+                    { text: "4", correct: false },
+                    { text: "5", correct: true },
+                    { text: "6", correct: false},
+                    { text: "3", correct: false }
+                ]
+            },
+            {
+                question: "Câu 5: Ở điều kiện thích hợp, hai chất phản ứng với nhau tạo thành mehtyl formate (HCOOCH3) là?",
+                answers: [
+                    { text: "HCOOH và NAOH", correct: false },
+                    { text: "HCOOH và CH3OH", correct: true },
+                    { text: "HCOOH và C2H5NH2", correct: false},
+                    { text: "CH3COONA và CH3OH", correct: false }
+                ]
+            },
+            {
+                question: "Câu 6:  Chất phản ứng với dung dịch NAOH tạo ra CH3COONA và C2H5OH?",
+                answers: [
+                    { text: "CH3COOCH3", correct: false },
+                    { text: "C2H5COOH", correct: false },
+                    { text: "HCOOC2H5", correct: false},
+                    { text: "CH3COOC2H5", correct: true }
+                ]
+            },
+            {
+                question: "Biển lớn nhất Việt Nam là?",
+                answers: [
+                    { text: "Biển Đông", correct: true },
+                    { text: "Biển Tây", correct: false },
+                    { text: "2", correct: false},
+                    { text: "Biển Nam", correct: false }
+                ]
+            },
+            {
+                question: "Vùng đất nào được gọi là 'vựa lúa' của Việt Nam?",
+                answers: [
+                    { text: "Đồng bằng sông Hồng", correct: false },
+                    { text: "Đồng bằng sông Cửu Long", correct: true },
+                    { text: "2", correct: false},
+                    { text: "Trung du miền núi phía Bắc", correct: false }
+                ]
+            },
+            {
+                question: "Ngày Quốc khánh Việt Nam là ngày nào?",
+                answers: [
+                    { text: "30/4", correct: false },
+                    { text: "2/9", correct: true },
+                    { text: "2", correct: false},
+                    { text: "1/5", correct: false }
+                ]
+            },
+            {
+                question: "Vịnh nổi tiếng với hàng ngàn đảo đá vôi ở Việt Nam là?",
+                answers: [
+                    { text: "Vịnh Nha Trang", correct: false },
+                    { text: "Vịnh Hạ Long", correct: true },
+                    { text: "2", correct: false},
+                    { text: "Vịnh Vĩnh Hy", correct: false }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const userAnswers = [];
+
+        const quizForm = document.getElementById('quiz-form');
+        const resultsSection = document.getElementById('results');
+        const scoreDisplay = document.getElementById('score');
+        const correctAnswersDisplay = document.getElementById('correct-answers');
+        const incorrectAnswersDisplay = document.getElementById('incorrect-answers');
+        const nextSubmitBtn = document.getElementById('next-submit-btn');
+
+        // Hàm để bắt đầu trò chơi
+        function startQuiz() {
+            showQuestion();
+        }
+
+        // Hàm để hiển thị câu hỏi hiện tại
+        function showQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            quizForm.innerHTML = `
+                <h2>${currentQuestion.question}</h2>
+                ${currentQuestion.answers.map((answer, index) => `
+                    <p><input type="radio" id="option${index + 1}" name="question" value="${answer.text}">
+                    <label for="option${index + 1}">${answer.text}</label></p>
+                `).join('')}
+            `;
+
+            if (currentQuestionIndex === questions.length - 1) {
+                nextSubmitBtn.textContent = "Nộp bài";
+            } else {
+                nextSubmitBtn.textContent = "Tiếp theo";
+            }
+        }
+
+        // Hàm để kiểm tra câu trả lời và chuyển sang câu hỏi tiếp theo
+        function submitAnswer() {
+            const selectedAnswer = document.querySelector('input[name="question"]:checked');
+            if (!selectedAnswer) {
+                alert("Vui lòng chọn một đáp án!");
+                return;
+            }
+
+            const currentQuestion = questions[currentQuestionIndex];
+            const correctAnswer = currentQuestion.answers.find(answer => answer.correct).text;
+
+            if (selectedAnswer.value === correctAnswer) {
+                score++;
+            } else {
+                userAnswers.push({ 
+                    question: currentQuestion.question, 
+                    selected: selectedAnswer.value, 
+                    correct: correctAnswer 
+                });
+            }
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                showQuestion(); // Hiển thị câu hỏi tiếp theo
+            } else {
+                showResults(); // Hiển thị kết quả cuối cùng
+            }
+        }
+
+        // Hàm để hiển thị kết quả cuối cùng
+        function showResults() {
+    quizForm.style.display = 'none';
+    resultsSection.style.display = 'block';
+
+    scoreDisplay.textContent = `Bạn đã trả lời đúng ${score}/${questions.length} câu.`;
+    
+    correctAnswersDisplay.innerHTML = '<h3>Các câu trả lời đúng:</h3>' + questions.map((question, index) => {
+        const correctAnswer = question.answers.find(answer => answer.correct).text;
+        return `<p><strong>${index + 1}. ${question.question}</strong><br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+    }).join('');
+    
+    incorrectAnswersDisplay.innerHTML = '<h3>Các câu trả lời sai:</h3>' + questions.map((question, index) => {
+        if (!question.answers.find(answer => answer.text === userAnswers[index] && answer.correct)) {
+            const correctAnswer = question.answers.find(answer => answer.correct).text;
+            return `<p style="color: red;"><strong>${index + 1}. ${question.question}</strong><br>Đáp án của bạn: ${userAnswers[index]}<br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+        }
+        return '';
+    }).join('');
+}
+
+        // Hàm để làm lại quiz
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers.length = 0;
+            quizForm.style.display = 'block';
+            resultsSection.style.display = 'none';
+            showQuestion();
+        }
+
+        // Bắt đầu quiz khi tải trang
+        startQuiz();
+    </script>
+</body>
+</html>

@@ -1,0 +1,500 @@
+= vbnm,./`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="BioCheX.png" type="image/x-icon">
+    <title>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</title>
+    <link rel="stylesheet" href="btester.css">
+</head>
+<body>
+    <header>
+        <h1>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Trang chủ</a></li>
+            </ul>
+            <marquee behavior="alternate">
+                <marquee style="color:#ffffff; font-weight:bold" width="700px">I LOVE CHEMISTRY - HOÁ HỌC ĐƯA ĐẾN TƯƠNG LAI</marquee>
+            </marquee>
+        </nav>
+    </header>
+    
+   <main>
+        <section id="quiz">
+            <h2>Câu hỏi</h2>
+            <form id="quiz-form">
+                <!-- Câu hỏi sẽ được hiển thị ở đây -->
+            </form>
+            <button id="next-submit-btn" onclick="submitAnswer()">Nộp bài</button>
+        </section>
+
+        <section id="question-list">
+            <h2>Danh sách câu hỏi</h2>
+            <ul id="question-navigation">
+                <!-- Số câu hỏi sẽ được thêm vào đây -->
+            </ul>
+        </section>
+
+        <section id="results" style="display: none;">
+            <h2>Kết quả</h2>
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhkNvC9P6pIqkHU2tDhRbPnV3Y36m7NdjiR5GVopADP9PkCHn7E0Mxs2grIyEZ7R66txHJFlQsEg1cNMsuubQ-h0EBUoUtQJ_nlHLc6MAPOiUeZSuDmPATHgLcFG-w3989IWawhrEwoV7bMrRSMmJQmmvcWs0Gdt7nZ2fQmBBRbdFQO7CTOO4XK9Tj7dA/s940/B%E1%BA%A3n%20sao%20c%E1%BB%A7a%20Ngh%C4%A9%20kh%C3%A1c%20%C4%91i%20(B%C3%A0i%20%C4%91%C4%83ng%20Facebook)%20(16).png" alt="Congratulations Image" id="congratulations-image">
+            <div id="score"></div>
+            <div id="correct-answers"></div>
+            <div id="incorrect-answers"></div>
+            <button onclick="restartQuiz()">Làm lại</button>
+        </section>
+    </main>
+
+    <footer>
+        <ul>
+                <p>BioCheX - Hoá Sinh trong đời sống. HVT-TNK</p>
+        </ul>
+    </footer>
+    <script>
+        // Dữ liệu về các câu hỏi và đáp án
+        const questions = [
+            {
+               question: "Câu 1: Phát biểu nào sau đây không đúng?",
+                answers: [
+                    { text: "Bậc của amine là bậc của nguyên tử carbon liên kết với nhóm amine.", correct: true },
+                    { text: "Tùy thuộc vào cấu trúc của gốc hydrocarbon, có thể phân biệt alkylamine, arylamine,…", correct: false },
+                    { text: "Amine được cấu thành bằng cách thay thế H của ammonia bằng một hay nhiều gốc hydrocarbon.", correct: false},
+                    { text: "Amine có từ hai nguyên tử carbon trong phân tử bắt đầu xuất hiện hiện tượng đồng phân.", correct: false }
+                ],
+                explanation: "Bậc của amine là số nguyên tử hydrogen được thay thế bằng gốc hydrocarbon."
+            },
+            {
+question: "Câu 2: Chất nào sau đây thuộc loại amine bậc một?",
+                answers: [
+                    { text: "(CH3)3N.", correct: false },
+                    { text: "CH3NHCH3.", correct: false },
+                    { text: "CH3NH2", correct:true},
+                    { text: "CH3CH2NHCH3.", correct: false }
+                ],
+                explanation: "Amine bậc một có dạng RNH2."
+            },
+            {
+question: "Câu 3: Trimethylamine có công thức cấu tạo thu gọn là",
+                answers: [
+                    { text: "(CH3)2NH.", correct: false },
+                    { text: "CH3NH2.", correct: false },
+                    { text: "(CH3)2NC2H3.", correct: false},
+                    { text: "(CH3)3N.", correct: true }
+                ],
+                explanation: "Trimethylamin là (CH3)3N "
+            },
+            {
+question: "Câu 4: Chất ứng với công thức cấu tạo nào sau đây là amine bậc hai?",
+                answers: [
+                    { text: "CH3-CH2-N(CH3)2.", correct: false },
+                    { text: "CH3-CH2-CH2-NH2.", correct: false},
+                    { text: "(CH3)2CH-NH2.", correct: false},
+                    { text: "CH3-NH-CH2-CH3.", correct: true }
+                ],
+                explanation: "Amine bậc một có dạng R1NHR2."
+            },
+            {
+question: "Câu 5: Amine nào sau đây là alkylamine?",
+                answers: [
+                    { text: "CH≡C-NH2.", correct: false },
+                    { text: "C6H5NH2.", correct: false },
+                    { text: "CH3NH2.", correct: true},
+                    { text: "CH2=CH-NH2.", correct: false }
+                ],
+                explanation: "Alkylamine là amine no (chỉ chứa liên kết đơn) ."
+            },
+            {
+question: "Câu 6: Tỉ lệ số người chết vì bệnh phổi do hút thuốc lá cao gấp hàng chục lần số người không hút thuốc lá. Chất gây nghiện có trong thuốc lá là",
+                answers: [
+                    { text: "acid nicotineic.", correct: false },
+                    { text: "caffeine.", correct: false },
+                    { text: "nicotine.", correct: false},
+                    { text: "morphine.", correct: true }
+                ],
+                explanation: "ỉ lệ số người chết vì bệnh phổi do hút thuốc lá cao gấp hàng chục lần số người không hút thuốc lá. Chất gây nghiện có trong thuốc lá là nicotine."
+            },
+            {
+question: "Câu 7: Amine có công thức CH3NH2 có tên thay thế và tên gốc – chức lần lượt là",
+                answers: [
+                    { text: "ethanamine và methylamine.", correct: false },
+                    { text: "methanamine và methylamine.", correct: true },
+                    { text: "methylamine và methanamine.", correct: false},
+                    { text: "methanamine và ethylamine.", correct: false }
+                ],
+                explanation: "Amine có công thức CH3NH2 có tên thay thế và tên gốc – chức lần lượt là methanamine và methylamine."
+            },
+            {
+question: "Câu 8: Amine CH3-N(CH3)-CH2CH3 có tên gọi thay thế là",
+                answers: [
+                    { text: "N-dimethylethanamine.", correct: false },
+                    { text: "N,N-dimethylethanamine.", correct: true },
+                    { text: "N,N-ethylmethylmethanamine.", correct: false},
+                    { text: "dimethylethanamine.", correct: false }
+                ],
+                explanation: "Tên gọi của amine bậc ba: N- gốc hydrocarbon thứ nhất - N-tên gốc hydrocarbon thứ hai tên hydrocarbon mạch dài nhât (bỏ e) - vị trí nhóm chức amine - amine nên Amine CH3-N(CH3)-CH2CH3 có tên gọi thay thế là N,N-dimethylethanamine. "
+            },
+            {
+question: "Câu 9: Số amine có công thức phân tử C3H9N là",
+                answers: [
+                    { text: "3.", correct: false },
+                    { text: "1.", correct: false },
+                    { text: "2.", correct: false},
+                    { text: "4.", correct: true }
+                ],
+                explanation: "Số amine có công thức phân tử C3H9N là 4: CH3-CH2-CH2-NH2; (CH3)2CH-NH2; CH3-NH-CH2-CH3;  (CH3)3N."
+            },
+            {
+question: "Câu 10: Amine nào sau đây là chất lỏng ở điều kiện thường?",
+                answers: [
+                    { text: "methylamine.", correct: false },
+                    { text: "ethylamine.", correct: true },
+                    { text: "dimethylamine.", correct: false},
+                    { text: "aniline.", correct: false }
+                ],
+explanation: "Methylamine, di methyl amine, trimethylamine và ethylamine là những chất khí ở điều kiện thường. Aniline là chất lỏng ở điều kiện thường "
+            },
+            {
+question: "Câu 11: Dung dịch chất nào sau đây không làm quỳ tím chuyển màu?",
+                answers: [
+                    { text: "Ethylamine.", correct: false },
+                    { text: "Aniline.", correct: true },
+                    { text: "Methylamine.", correct: false},
+                    { text: "Trimethylamine.", correct: false}
+                ],
+                explanation: "Dung dịch aniline trong nước không làm đổi màu quỳ tím trong khi dung dịch các alkylamine có thể làm quỳ tím hoá xanh."
+            },             {
+question: "Câu 12: Methylamine (CH3NH2) tác dụng được với chất nào sau đây trong dung dịch?",
+                answers: [
+                    { text: "HCl.", correct: false },
+                    { text: "NaCl.", correct: true },
+                    { text: "KNO3.", correct: false},
+                    { text: "KOH.", correct: false}
+                ],
+                explanation: "Amine có tính base nên tác dụng được với acid."
+            },
+            {
+question: "Câu 13: Ở điều kiện thường, amine X là chất lỏng, dễ bị oxi hóa khi để ngoài không khí. Dung dịch X không làm đổi màu quỳ tím nhưng tác dụng với nước bromine tạo kết tủa trắng. Amine X là",
+                answers: [
+                    { text: "Benzylamine.", correct: false },
+                    { text: "Aniline.", correct: true },
+                    { text: "Dimethylamine.", correct: false},
+                    { text: "Methylamine.", correct: false}
+                ],
+                explanation: "Ở điều kiện thường, aniline là chất lỏng, dễ bị oxi hóa khi để ngoài không khí. Dung dịch aniline không làm đổi màu quỳ tím nhưng tác dụng với nước bromine tạo kết tủa trắng"
+            },
+            {
+question: "Câu 14: Ethylamine không phản ứng được với dụng dịch nào sau đây ?",
+                answers: [
+                    { text: "HNO2.", correct: false },
+                    { text: "Cu(OH)2.", correct: false },
+                    { text: "HCl. ", correct: false},
+                    { text: "KOH. ", correct: true}
+                ],
+                explanation: "Ethylamine có tính base nên không phản ứng được với dụng dịch KOH."
+            },
+            {
+question: "Câu 15: Cho methylamine phản ứng với nitrous acid giải phóng khí nitrogen và thu được hợp chất hữu cơ nào?",
+                answers: [
+                    { text: "CH3CHO.", correct: false },
+                    { text: "CH3OH.", correct: true },
+                    { text: "CH3COOH.", correct: false},
+                    { text: "CH3Cl.", correct: false }
+                ],
+                explanation: "Alkylamine bậc một tác dụng với nitrous acid ở nhiệt độ thường tạo thành alcohol (ROH) và giải phóng nitrogen."
+            },
+            {
+question: "Câu 16: Nhỏ từ từ đến dư dung dịch methylamine vào dung dịch FeCl¬3. Hiện tượng quan sát được là",
+                answers: [
+                    { text: " xuất hiện kết tủa màu xanh lam.", correct: false },
+                    { text: "xuất hiện kết tủa màu trắng hơi xanh.", correct: false },
+                    { text: "xuất hiện kết tủa màu trắng nâu đỏ sau đó kết tủa tan hết.", correct: false},
+                    { text: "xuất hiện kết tủa màu nâu đỏ.", correct: true }
+                ],
+                explanation: " dung dịch methylamine vào dung dịch FeCl¬3  tạo ra kết tủa màu nâu đỏ không tan trong dung dịch methylaminie dư."
+            },
+            {
+              question: "Câu 17: Nhỏ từ từ đến dư dung dịch ethylamine vào dung dịch CuSO4. Hiện tượng quan sát được là",
+                answers: [
+                    { text: "xuất hiện kết tủa màu xanh lam.", correct: false },
+                    { text: "xuất hiện kết tủa màu xanh lam sau đó kết tủa tan hết tạo thành dung dịch màu xanh lam.", correct: true },
+                    { text: "xuất hiện kết tủa màu đỏ gạch sau đó kết tủa tan hết tạo thành dung dịch màu đỏ.", correct: false},
+                    { text: "xuất hiện kết tủa màu trắng nâu đỏ sau đó kết tủa tan hết.", correct: false }
+                ],
+                explanation: "Nhỏ từ từ đến dư dung dịch ethylamine vào dung dịch CuSO4. Hiện tượng quan sát được là xuất hiện kết tủa màu xanh lam sau đó kết tủa tan hết tạo thành dung dịch màu xanh lam. "
+            },
+            {
+A. question: "Câu 18: Biết rằng mùi tanh của cá (đặc biệt cá mè) là hỗn hợp các amine (nhiều nhất là trimethylamine) và một số chất khác . Để khử mùi tanh của cá trước khi nấu có thể dùng dung dịch nào sau đây?",
+                answers: [
+                    { text: "xút.", correct: false },
+                    { text: "nước vôi.", correct: true },
+                    { text: "vôi sống.", correct: false},
+                    { text: "giấm ăn.", correct: false }
+                ],
+                explanation: "Biết rằng mùi tanh của cá (đặc biệt cá mè) là hỗn hợp các amine (nhiều nhất là trimethylamine) và một số chất khác . Để khử mùi tanh của cá do amine gây ra  trước khi nấu có thể dùng dung dịch giấm ăn (CH3COOH là acid)."
+            },
+            {
+question: "Câu 19: Muối diazonium [C6H5N2]+Cl– được sinh từ phản ứng giữa",
+                answers: [
+                    { text: "C6H5NH2 + HCl.", correct: false },
+                    { text: "C6H5CH2NH2 + HNO2 + HCl.", correct: false },
+                    { text: "C6H5NH2 + HNO2 + HCl .", correct: true },
+                    { text: "CH3NH2 + HNO2.", correct: false}
+                ],
+                explanation: "C6H5NH2 + HONO + HCl → [C6H5N2]+Cl- + 2H2O"
+            },
+            {
+question: "Câu 20: Phát biểu nào không đúng trong các phát biểu sau về ứng dụng của amine?",
+                answers: [
+                    { text: "Aniline là nguyên liệu quan trọng để tổng hợp phẩm nhuộm (phẩm màu azo, aniline đen,…), chất hoạt động bền mặt.", correct: false },
+                    { text: "H2N-[CH2]6-NH2 (hexamethylenediamine) ứng dụng để sản xuất tơ nylon-6,6.", correct: false},
+                    { text: "Aniline được ứng dụng để sản xuất nhựa poly(aniline-formaldehyde).", correct: false},
+                    { text: "Amine không độc, có thể ứng dụng để chế biến thực phẩm.", correct: true }
+                ],
+                explanation: "Các amine đều độc."
+            },
+            {
+ question: "Câu 21: Khi thay thế nguyên tử trong NH3 bằng gốc hydrocarbon ta được amine và bậc amine bằng số nguyên tử H bị thay thế. Phát biểu nào sau đây đúng khi nói về amine?",
+                answers: [
+                    { text: "Aniline làm quỳ tím ẩm chuyển màu xanh.", correct: false},
+                    { text: "Ở nhiệt độ thường, tất cả các amine đều tan nhiều trong nước.", correct: false },
+                    { text: "Isopropylamine là amine bậc hai.", correct: false } 
+                    { text: "Để nhận biết aniline người ta dùng dung dịch bromine.", correct: true },  
+                ],
+                explanation: "Aniline không làm đổi màu quỳ tím. Các amine có tổng số nguyên tử carbon nhỏ thường tan tốt trong nước và độ tan giảm khi số nguyên tử carbon trong phân tử amine tăng lên. Các arylamine có độ tan trong nước rất thấp. Isopropylamine ((CH3)2CH-NH2) là amine bậc một."
+            },
+ question: "Câu 22:Phát biểu nào dưới đây không đúng?",
+                answers: [
+                    { text: "Phân tử ethylamine chứa nhóm chức -NH2.", correct: false},
+                    { text: "Ethylamine tan tốt trong nước.", correct: false},
+                    { text: "Ethylamine tác dụng với nitrous acid thu được muối diazonium.", correct: true  } 
+                    { text: "Dung dịch ethylamine trong nước làm quỳ tím hóa xanh.", correct: false },  
+                ],
+                explanation: "Ethylamine tác dụng với nitrous acid thu được C2H5OH (ethyl alcohol/ethanol)"
+            },
+ question: "Câu 23:Phát biểu nào sau đây đúng?",
+                answers: [
+                    { text: "Các chất NaOH, C2H5OH, HCl có phản ứng với aniline.", correct: false},
+                    { text: "Nhỏ nước bromine vào dung dịch aniline thấy xuất hiện kết tủa màu vàng.", correct: false },
+                    { text: "Hợp chất C2H7N có 1 đồng phân amine.", correct: false } 
+                    { text: "Do nguyên tử nitrogen của phân tử amine còn 1 cặp electron hóa trị riêng nên amine có tính base.", correct: true },            
+                ],
+                explanation: "Aniline phản ứng được với HCl. Nhỏ nước bromine vào dung dịch aniline thấy xuất hiện kết tủa màu trắng. Hợp chất C2H7N có 2 đồng phân amine (CH3-CH2-NH2; CH3-NH-CH3)."
+            },
+ question: "Câu 24:Cho các phát biểu sau: 
+   <br> (a) Methylamine, dimethylamine, trimethylamine và ethylamine là những chất khí mùi khai khó chịu, độc; 
+   <br> (b) Các đồng đẳng của methylamine có độ tan trong nước giảm dần theo chiều tăng của khối lượng phân tử;
+   <br> (c) Aniline có tính base và làm xanh quỳ tím ẩm; 
+   <br> (d) Amine là hợp chất hữu cơ có chứa nguyên tử C, H và N. 
+   <br> (e) Methylamine được điều chế từ bromoethane và ammnonia. Số phát biểu đúng là",
+                answers: [
+                    { text: "1.", correct: false},
+                    { text: "2.", correct: false },
+                    { text: "4.", correct: false } 
+                    { text: "3.", correct: true },
+                ],
+                explanation: "Phát biểu c sai vì  aniline không làm đổi màu quỳ tím ẩm. Phát biểu e sai vì methylamine được điều chế từ bromomethane và ammnonia."
+            },
+ 
+ question: "Câu 25:Tiến hành các thí nghiệm sau: 
+<br> – Thí nghiệm 1: Cho vào ống nghiệm (1) khoảng 1 mL dung dịch ethylamine 5%. Lấy đũa thuỷ tinh nhúng vào dung dịch rồi chấm vào giấy quỳ tím. Nhúng đũa thuỷ tinh sạch vào dung dịch HCl đặc rồi đưa đầu đũa thuỷ tinh vào miệng ống nghiệm (1); 
+<br> –Thí nghiệm 2: Cho vào ống nghiệm (2) 5 giọt dung dịch FeCl3 3%. Thêm từ từ đến hết 2 mL dung dich ethylamine 5%. Vừa thêm vừa lắc ống nghiệm; 
+<br> – Thí nghiệm 3: Cho vào ống nghiệm (3) 5 giọt dung dịch CuSO4 5%. Thêm từ từ đến hết 4 mL dung dịch ethylamine 5%, vừa thêm vừa lắc ống nghiệm. 
+<br> Cho các phát biểu:
+<br> (a) Ở thí nghiệm 1, quỳ tím hoá xanh và khi nhúng đũa thuỷ tinh sạch vào dung dịch HCl đặc rồi đưa đầu đũa thuỷ tinh vào miệng ống nghiệm (1) thấy xuất hiện khói trắng; 
+<br> (b) Ở thí nghiệm 2, xuất hiện kết tủa màu trắng hơi xanh; 
+<br> (c) Ở thí nghiệm 3, ban đầu xuất hiện kết tủa màu xanh lam, sau đó kết tủa bị hòa tan thành dung dịch không màu do ethylamine có khả năng tạo phức chất;
+<br> (d) Cả ba thí nghiệm trên đều chứng tỏ ethylamine có tính base và cần tiến hành ở nơi thoáng khí hoặc trong tủ hốt (tủ hút). 
+<br> Số phát biểu đúng là",
+                answers: [
+                    { text: "1.", correct: false},
+                    { text: "3.", correct: false},
+                    { text: "2.", correct: true  } 
+                    { text: "4.", correct: false },  
+                ],
+              explanation: "Phát biểu b sai vì ở thí nghiệm 2, xuất hiện kết tủa màu nâu đỏ. Phát biểu c sai vì ở thí nghiệm 3, ban đầu xuất hiện kết tủa màu xanh lam, sau đó kết tủa bị hòa tan thành dung dịch màu xanh lam do ethylamine có khả năng tạo phức chất."            },
+  question: "Câu 26:Tiến hành thí nghiệm theo các bước sau:
+<br>– Bước 1: Nhỏ vài giọt aniline vào ống nghiệm chứa 10 ml nước cất, lắc đều, sau đó để yên.
+<br>– Bước 2: Nhỏ tiếp dung dịch HCl đặc, dư vào ống nghiệm.
+<br>– Bước 3: Cho tiếp dung dịch NaOH loãng (dùng dư), đun nóng.
+<br>Cho các phát biểu sau:
+<br> a. Ở bước 1, aniline hầu như không tan và lắng xuống đáy, sau đó nhúng quỳ tím vào thấy quỳ tím không đổi màu.
+<br> b. Sau bước 2 thì aniline tan dần.
+<br> c. Kết thúc bước 3, thu được dung dịch trong suốt.
+<br> d. Sau khi làm thí nghiệm, rửa ống nghiệm bằng dung dịch HCl, sau đó tráng lại bằng nước sạch.
+<br> Số phát biểu đúng là",
+                answers: [
+                    { text: "2.", correct: false },
+                    { text: "3.", correct: true },
+                    { text: "5.", correct: false},
+                    { text: "4.", correct: false }
+                ],
+                explanation: " Phát biểu c sai vì ở bước 3 xảy ra phản  ứng tái tạo aniline nên dung dịch bị vẩn đục vì aniline tan ít trong nước."
+            },
+
+		                question: "Câu 27: Phát biểu nào sau đây sai?",
+                answers: [
+                    { text: "Sau khi mổ cá, có thể dùng giấm ăn để giảm mùi tanh (do amine gây ra).", correct: false },
+                    { text: "Aniline là một amine bậc hai", correct: true },
+                    { text: "Aniline tác dụng với nước bromine tạo kết tủa màu trắng.", correct: false},
+                    { text: "Dimethylamine là amine bậc hai.", correct: false }
+                ],
+                explanation: "Aniline là một amine bậc một."
+            },
+		    question: "Câu 28:Chọn nhận xét sai:",
+                   answers: [
+                    { text: "Hợp chất amine C7H9N (chứa vòng benzene) có 5 đồng phân cấu tạo..", correct: false},
+                    { text: "Phenol và aniline đều tác dụng với: dd bromine, dd NaOH..", correct: true },
+                    { text: "Aniline không làm đổi màu giấy quỳ tím.", correct: false} 
+                    { text: "Methylamine, dimethylamine, trimethylamine, ethylamine là những chất khí ở điều kiện thường.", correct: false },  
+                ],
+                explanation: "Phenol và aniline đều tác dụng với dd bromine."
+            },            
+        ];
+question: "Câu 29:Amine X đơn chức . X tác dụng với HCl thu được muối Y có công thức là RNH3Cl. Trong Y, chlorine chiếm 32,42% về khối lượng. Hãy cho biết X có bao nhiêu công thức cấu tạo?",
+                answers: [
+                   { text: "5.", correct: false},
+                    { text: "3.", correct: false },
+                    { text: "4", correct: true} 
+                    { text: "2.", correct: false }, 
+                ],
+                explanation: "Amine X đơn chức . X tác dụng với HCl thu được muối Y có công thức là RNH3Cl nên X là amine bậc một (RNH2). Từ %Cl suy ra MX= 73 . Vậy X là C4H11N nên có 4 công thức cấu tạo."
+            },            
+        ];
+question: "Câu 30: Cho các chất sau: ethanol, phenol, aniline, phenylammonium chloride, potassium acetate. Số chất phản ứng được với dung dịch NaOH là",
+                answers: [
+                    { text: "3.", correct: false},
+                    { text: "2.", correct: true },
+                    { text: "1.", correct: false} 
+                    { text: "4.", correct: false }, 
+               ],
+                explanation: "phenol, phenylammonium chloride phản ứng được với dung dịch NaOH."
+            },            
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const userAnswers = [];
+
+        const quizForm = document.getElementById('quiz-form');
+        const resultsSection = document.getElementById('results');
+        const scoreDisplay = document.getElementById('score');
+        const correctAnswersDisplay = document.getElementById('correct-answers');
+        const incorrectAnswersDisplay = document.getElementById('incorrect-answers');
+        const nextSubmitBtn = document.getElementById('next-submit-btn');
+        const questionNavigation = document.getElementById('question-navigation');
+
+        // Hàm để bắt đầu trò chơi
+        function startQuiz() {
+            showQuestion();
+            createQuestionNavigation();
+        }
+
+        // Hàm để hiển thị câu hỏi hiện tại
+        function showQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            quizForm.innerHTML = `
+                <h2>${currentQuestion.question}</h2>
+                ${currentQuestion.answers.map((answer, index) => `
+                    <p><input type="radio" id="option${index + 1}" name="question" value="${answer.text}">
+                    <label for="option${index + 1}">${answer.text}</label></p>
+                `).join('')}`;
+
+            if (currentQuestionIndex === questions.length - 1) {
+                nextSubmitBtn.textContent = "Nộp bài";
+            } else {
+                nextSubmitBtn.textContent = "Tiếp theo";
+            }
+
+            updateQuestionNavigation();
+        }
+
+        // Hàm để kiểm tra câu trả lời và chuyển sang câu hỏi tiếp theo
+        function submitAnswer() {
+            const selectedAnswer = document.querySelector('input[name="question"]:checked');
+            if (selectedAnswer) {
+                const currentQuestion = questions[currentQuestionIndex];
+                userAnswers[currentQuestionIndex] = selectedAnswer.value;
+
+                if (currentQuestion.answers.find(answer => answer.text === selectedAnswer.value && answer.correct)) {
+                    score++;
+                }
+
+                currentQuestionIndex++;
+
+                if (currentQuestionIndex < questions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            } else {
+                alert('Vui lòng chọn một đáp án.');
+            }
+        }
+
+        // Hàm để hiển thị kết quả
+        function showResults() {
+            quizForm.style.display = 'none';
+            resultsSection.style.display = 'block';
+
+            scoreDisplay.textContent = `Bạn đã trả lời đúng ${score}/${questions.length} câu.`;
+            correctAnswersDisplay.innerHTML = '<h3>Các câu trả lời đúng:</h3>' + questions.map((question, index) => {
+                const correctAnswer = question.answers.find(answer => answer.correct).text;
+                return `<p><strong>${index + 1}. ${question.question}</strong><br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+            }).join('');
+            incorrectAnswersDisplay.innerHTML = '<h3>Các câu trả lời sai:</h3>' + questions.map((question, index) => {
+                if (!question.answers.find(answer => answer.text === userAnswers[index] && answer.correct)) {
+                    const correctAnswer = question.answers.find(answer => answer.correct).text;
+                    return `<p><strong>${index + 1}. ${question.question}</strong><br>Đáp án của bạn: ${userAnswers[index]}<br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+                }
+                return '';
+            }).join('');
+        }
+
+        // Hàm để tạo danh sách câu hỏi
+        function createQuestionNavigation() {
+            questionNavigation.innerHTML = '';
+            for (let i = 0; i < questions.length; i++) {
+                const questionLink = document.createElement('li');
+                questionLink.textContent = i + 1;
+                questionLink.onclick = () => goToQuestion(i);
+                questionNavigation.appendChild(questionLink);
+            }
+        }
+
+        // Hàm để cập nhật danh sách câu hỏi
+        function updateQuestionNavigation() {
+            const questionLinks = questionNavigation.children;
+            for (let i = 0; i < questionLinks.length; i++) {
+                if (userAnswers[i] !== undefined) {
+                    questionLinks[i].style.backgroundColor = 'green';
+                    questionLinks[i].style.color = 'white';
+                } else {
+                    questionLinks[i].style.backgroundColor = 'transparent';
+                    questionLinks[i].style.color = 'black';
+                }
+            }
+        }
+
+        // Hàm để chuyển đến câu hỏi cụ thể
+        function goToQuestion(index) {
+            currentQuestionIndex = index;
+            showQuestion();
+        }
+
+        // Hàm để làm lại bài kiểm tra
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers.length = 0;
+            quizForm.style.display = 'block';
+            resultsSection.style.display = 'none';
+            startQuiz();
+        }
+
+        // Bắt đầu trò chơi
+        startQuiz();
+    </script>
+</body>
+</html>
+

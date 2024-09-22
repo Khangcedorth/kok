@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="BioCheX.png" type="image/x-icon">
+    <title>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</title>
+    <link rel="stylesheet" href="stem.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <audio id="Audio" autoplay>
+        <source src="x.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        window.onload = function() {
+            const audio = document.getElementById('Audio');
+            audio.play().catch(function(error) {
+                console.log("Tự động phát bị chặn bởi trình duyệt:", error);
+            });
+        };
+    </script>
+    <section class="image-grid">
+        <div class="image-tile">
+            <a href="locnuoc.html">
+                <img src="https://scontent-hkg1-2.xx.fbcdn.net/v/t39.30808-6/460670872_1208655320348152_7140715084966982677_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_ohc=zUu9jz4LG8QQ7kNvgHpwCAN&_nc_ht=scontent-hkg1-2.xx&_nc_gid=AoTkXB0CKUZYBPbVrgMkET9&oh=00_AYD3B9aSKsqFQOezYqjqajCxTBNAb3OSe6UahjMiBPtxSQ&oe=66F1F8E2" alt="Mô tả hình ảnh 1">
+                <div class="text-overlay">Lọc Nước</div>
+            </a>
+        </div>
+        <div class="image-tile">
+            <a href="xetaiche.html">
+                <img src="https://dep.com.vn/Uploaded/khangdtm/2016_03_13/nhung-thu-vi-ve-xa-phong(8).jpg" alt="Mô tả hình ảnh 1">
+                <div class="text-overlay">Làm xà Phòng từ NaOH</div>
+            </a>
+        </div>
+        <div class="image-tile">
+            <a href="trichoderma.html">
+                <img src="https://khuyennong.quangtri.gov.vn/uploads/news/2022_06/trichoderma-cnx-u-phan.jpg" alt="Mô tả hình ảnh 3">
+                <div class="text-overlay">Ủ phân bón bằng Trichoderma</div>
+            </a>
+        </div>
+    </section>
+    <script>
+        const introAudio = document.getElementById('introAudio');
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'vi-VN'; // Đặt ngôn ngữ tiếng Việt
+    
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey) {
+                // Kiểm tra nếu phím "Ctrl" được nhấn
+                if (introAudio.paused) {
+                    introAudio.play(); // Phát âm thanh nếu đang dừng
+                } else {
+                    introAudio.pause(); // Tạm dừng nếu đang phát
+                    introAudio.currentTime = 0; // Đặt lại thời gian phát
+                }
+            } else if (event.key === ' ') {
+                // Kiểm tra nếu phím "Space" được nhấn
+                recognition.start(); // Bắt đầu thu âm
+            }
+        });
+    
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript.toLowerCase(); // Chuyển giọng nói thành văn bản và viết thường
+            console.log(transcript); // Xem kết quả thu âm
+    
+            // Điều hướng tới các video YouTube dựa trên từ khóa
+            if (transcript.includes('lọc nước')) {
+                window.location.href = 'https://www.youtube.com/watch?v=M_vUcoo4gLA'; // Đường dẫn video liên quan đến pH trong đất
+            }
+            if (transcript.includes('xà phòng')) {
+                window.location.href = 'https://www.youtube.com/watch?v=dxY1AT8BEKk'; // Đường dẫn video liên quan đến chuẩn độ
+            }
+            if (transcript.includes('phân')) {
+                window.location.href = 'https://www.youtube.com/watch?v=PMhWz6qb9z8'; // Đường dẫn video liên quan đến sinh thiết
+            }
+        };
+    
+        recognition.onerror = function(event) {
+            console.error('Lỗi nhận diện giọng nói: ', event.error);
+        };
+    </script>
+    
+</body>
+</html>
+

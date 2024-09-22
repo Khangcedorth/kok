@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="BioCheX.png" type="image/x-icon">
+    <title>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</title>
+    <link rel="stylesheet" href="btester.css">
+</head>
+<body>
+    <header>
+        <h1>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Trang chủ</a></li>
+            </ul>
+            <marquee behavior="alternate">
+                <marquee style="color:#ffffff; font-weight:bold" width="700px">I LOVE CHEMISTRY - HOÁ HỌC ĐƯA ĐẾN TƯƠNG LAI</marquee>
+            </marquee>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="quiz">
+            <h2>Câu hỏi</h2>
+            <form id="quiz-form">
+                <!-- Câu hỏi sẽ được hiển thị ở đây -->
+            </form>
+            <button id="next-submit-btn" onclick="submitAnswer()">Nộp bài</button>
+        </section>
+
+        <section id="question-list">
+            <h2>Danh sách câu hỏi</h2>
+            <ul id="question-navigation">
+                <!-- Số câu hỏi sẽ được thêm vào đây -->
+            </ul>
+        </section>
+
+        <section id="results" style="display: none;">
+            <h2>Kết quả</h2>
+            <div id="score"></div>
+            <div id="correct-answers"></div>
+            <div id="incorrect-answers"></div>
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhkNvC9P6pIqkHU2tDhRbPnV3Y36m7NdjiR5GVopADP9PkCHn7E0Mxs2grIyEZ7R66txHJFlQsEg1cNMsuubQ-h0EBUoUtQJ_nlHLc6MAPOiUeZSuDmPATHgLcFG-w3989IWawhrEwoV7bMrRSMmJQmmvcWs0Gdt7nZ2fQmBBRbdFQO7CTOO4XK9Tj7dA/s940/B%E1%BA%A3n%20sao%20c%E1%BB%A7a%20Ngh%C4%A9%20kh%C3%A1c%20%C4%91i%20(B%C3%A0i%20%C4%91%C4%83ng%20Facebook)%20(16).png" alt="Congratulations Image" id="congratulations-image">
+
+            <button onclick="restartQuiz()">Làm lại</button>
+        </section>
+    </main>
+
+    <footer>
+        <ul>
+            <p>BioCheX - Hoá Sinh trong đời sống. HVT-TNK</p>
+        </ul>
+    </footer>
+    <script>
+        // Dữ liệu về các câu hỏi và đáp án
+        const questions = [
+    {
+        question: "Câu 1: Cồn ethanol có công thức hóa học là gì?",
+        answers: [
+            { text: "CH3OH", correct: false },
+            { text: "C2H5OH", correct: true },
+            { text: "C3H7OH", correct: false },
+            { text: "C4H9OH", correct: false }
+        ],
+        explanation: "Ethanol có công thức hóa học là C2H5OH."
+    },
+    {
+        question: "Câu 2: Loại liên kết hóa học chính trong phân tử cồn ethanol là gì?",
+        answers: [
+            { text: "Liên kết ion", correct: false },
+            { text: "Liên kết cộng hóa trị", correct: true },
+            { text: "Liên kết kim loại", correct: false },
+            { text: "Liên kết hydro", correct: false }
+        ],
+        explanation: "Trong phân tử ethanol, các nguyên tử được liên kết với nhau bằng liên kết cộng hóa trị."
+    },
+    {
+        question: "Câu 3: Ethanol có thể tác dụng với chất nào sau đây để tạo ra ethyl acetate?",
+        answers: [
+            { text: "CH3COOH", correct: true },
+            { text: "H2SO4", correct: false },
+            { text: "NaOH", correct: false },
+            { text: "Cl2", correct: false }
+        ],
+        explanation: "Ethanol phản ứng với acid acetic (CH3COOH) tạo thành ethyl acetate (CH3COOCH2CH3)."
+    },
+    {
+        question: "Câu 4: Trong các loại alcohol sau, loại nào có khả năng gây độc cao nhất?",
+        answers: [
+            { text: "Methanol", correct: true },
+            { text: "Ethanol", correct: false },
+            { text: "Propanol", correct: false },
+            { text: "Butanol", correct: false }
+        ],
+        explanation: "Methanol là loại cồn có khả năng gây độc cao nhất trong các loại cồn kể trên."
+    },
+    {
+        question: "Câu 5: Cồn công nghiệp (Methanol) thường được sử dụng trong lĩnh vực nào?",
+        answers: [
+            { text: "Chế biến thực phẩm", correct: false },
+            { text: "Làm nhiên liệu", correct: true },
+            { text: "Sản xuất nước hoa", correct: false },
+            { text: "Dược phẩm", correct: false }
+        ],
+        explanation: "Methanol thường được sử dụng làm nhiên liệu do tính độc hại khi sử dụng trong thực phẩm và dược phẩm."
+    },
+    {
+        question: "Câu 6: Phản ứng lên men rượu để tạo ra ethanol từ đường có sự tham gia của vi sinh vật nào?",
+        answers: [
+            { text: "Vi khuẩn lactic", correct: false },
+            { text: "Nấm men", correct: true },
+            { text: "Vi khuẩn acetic", correct: false },
+            { text: "Vi khuẩn butyric", correct: false }
+        ],
+        explanation: "Nấm men (Saccharomyces cerevisiae) là vi sinh vật chính tham gia vào quá trình lên men rượu từ đường."
+    },
+    {
+        question: "Câu 7: Phản ứng đốt cháy hoàn toàn ethanol tạo ra các sản phẩm nào?",
+        answers: [
+            { text: "CO2 và H2O", correct: true },
+            { text: "CO và H2O", correct: false },
+            { text: "C2H4 và H2O", correct: false },
+            { text: "C và H2O", correct: false }
+        ],
+        explanation: "Đốt cháy hoàn toàn ethanol (C2H5OH) tạo ra carbon dioxide (CO2) và nước (H2O)."
+    },
+    {
+        question: "Câu 8: Để xác định hàm lượng cồn trong máu, người ta thường sử dụng phương pháp nào?",
+        answers: [
+            { text: "Phép đo quang phổ", correct: false },
+            { text: "Phép đo nhiệt lượng", correct: false },
+            { text: "Phép đo điện hóa", correct: false },
+            { text: "Phép đo hô hấp", correct: true }
+        ],
+        explanation: "Phép đo hô hấp thường được sử dụng để xác định hàm lượng cồn trong máu qua hơi thở."
+    },
+    {
+        question: "Câu 9: Trong công nghiệp, ethanol có thể được sản xuất từ ethene (C2H4) bằng phương pháp nào?",
+        answers: [
+            { text: "Hydro hóa", correct: false },
+            { text: "Oxi hóa", correct: false },
+            { text: "Hydrat hóa", correct: true },
+            { text: "Phân hủy nhiệt", correct: false }
+        ],
+        explanation: "Ethanol có thể được sản xuất từ ethene bằng phản ứng hydrat hóa (thêm nước) với sự có mặt của acid sulfuric làm chất xúc tác."
+    },
+    {
+        question: "Câu 10: Nhóm chức của alcohol là nhóm nào sau đây?",
+        answers: [
+            { text: "Nhóm -OH", correct: true },
+            { text: "Nhóm -NH2", correct: false },
+            { text: "Nhóm -COOH", correct: false },
+            { text: "Nhóm -CHO", correct: false }
+        ],
+        explanation: "Nhóm chức của alcohol là nhóm hydroxyl (-OH)."
+    },
+    {
+        question: "Câu 11: Sự khác biệt chính giữa ethanol và methanol là gì?",
+        answers: [
+            { text: "Số nguyên tử carbon", correct: true },
+            { text: "Số nguyên tử hydro", correct: false },
+            { text: "Số nguyên tử oxygen", correct: false },
+            { text: "Số liên kết cộng hóa trị", correct: false }
+        ],
+        explanation: "Sự khác biệt chính giữa ethanol (C2H5OH) và methanol (CH3OH) là số nguyên tử carbon trong mỗi phân tử."
+    },
+    {
+        question: "Câu 12: Phản ứng chính để tạo ra biodiesel từ dầu thực vật sử dụng alcohol nào?",
+        answers: [
+            { text: "Methanol", correct: true },
+            { text: "Ethanol", correct: false },
+            { text: "Propanol", correct: false },
+            { text: "Butanol", correct: false }
+        ],
+        explanation: "Methanol thường được sử dụng trong phản ứng transesterification để sản xuất biodiesel từ dầu thực vật."
+    },
+    {
+        question: "Câu 13: Để tách biệt ethanol từ hỗn hợp nước và ethanol, phương pháp nào thường được sử dụng?",
+        answers: [
+            { text: "Chưng cất", correct: true },
+            { text: "Lọc", correct: false },
+            { text: "Lắng đọng", correct: false },
+            { text: "Kết tinh", correct: false }
+        ],
+        explanation: "Chưng cất là phương pháp thường được sử dụng để tách biệt ethanol từ hỗn hợp nước và ethanol do điểm sôi khác nhau của chúng."
+    },
+    {
+        question: "Câu 14: Methanol khi bị đốt cháy trong không khí sẽ tạo ra sản phẩm gì?",
+        answers: [
+            { text: "CO2 và H2O", correct: true },
+            { text: "CO và H2O", correct: false },
+            { text: "C2H4 và H2O", correct: false },
+            { text: "C và H2O", correct: false }
+        ],
+        explanation: "Đốt cháy hoàn toàn methanol (CH3OH) sẽ tạo ra carbon dioxide (CO2) và nước (H2O)."
+    },
+    {
+        question: "Câu 15: Công thức phân tử của isopropanol là gì?",
+        answers: [
+            { text: "C3H7OH", correct: true },
+            { text: "C3H8O", correct: false },
+            { text: "C3H6OH", correct: false },
+            { text: "C3H7O", correct: false }
+        ],
+        explanation: "Isopropanol có công thức phân tử là C3H7OH."
+    },
+    {
+        question: "Câu 16: Loại alcohol nào sau đây thường được dùng làm chất khử trùng trong y tế?",
+        answers: [
+            { text: "Methanol", correct: false },
+            { text: "Ethanol", correct: true },
+            { text: "Propanol", correct: false },
+            { text: "Butanol", correct: false }
+        ],
+        explanation: "Ethanol thường được sử dụng làm chất khử trùng trong y tế do tính sát khuẩn của nó."
+    },
+    {
+        question: "Câu 17: Sản phẩm nào sau đây không thể tạo ra từ phản ứng của ethanol với sodium?",
+        answers: [
+            { text: "H2", correct: false },
+            { text: "C2H5ONa", correct: false },
+            { text: "NaOH", correct: true },
+            { text: "C2H5OH", correct: false }
+        ],
+        explanation: "Phản ứng của ethanol với sodium tạo ra natri ethoxide (C2H5ONa) và hydro (H2), không tạo ra natri hydroxide (NaOH)."
+    },
+    {
+        question: "Câu 18: Phản ứng chính để tổng hợp ethanol từ ethylene là gì?",
+        answers: [
+            { text: "Phản ứng hydrat hóa", correct: true },
+            { text: "Phản ứng hydro hóa", correct: false },
+            { text: "Phản ứng oxi hóa", correct: false },
+            { text: "Phản ứng polymer hóa", correct: false }
+        ],
+        explanation: "Ethanol có thể được tổng hợp từ ethylene (C2H4) qua phản ứng hydrat hóa."
+    },
+    {
+        question: "Câu 19: Trong quá trình lên men, vai trò chính của nấm men là gì?",
+        answers: [
+            { text: "Chuyển hóa glucose thành ethanol và CO2", correct: true },
+            { text: "Chuyển hóa glucose thành acid lactic", correct: false },
+            { text: "Chuyển hóa ethanol thành acid acetic", correct: false },
+            { text: "Chuyển hóa ethanol thành glucose", correct: false }
+        ],
+        explanation: "Nấm men chuyển hóa glucose thành ethanol và CO2 trong quá trình lên men."
+    },
+    {
+        question: "Câu 20: Cồn công nghiệp (methanol) chủ yếu được sản xuất từ nguyên liệu nào?",
+        answers: [
+            { text: "Than đá", correct: true },
+            { text: "Dầu mỏ", correct: false },
+            { text: "Khí thiên nhiên", correct: false },
+            { text: "Đường", correct: false }
+        ],
+        explanation: "Methanol chủ yếu được sản xuất từ than đá qua quá trình khí hóa."
+    }
+];
+let currentQuestionIndex = 0;
+        let score = 0;
+        const userAnswers = [];
+
+        const quizForm = document.getElementById('quiz-form');
+        const resultsSection = document.getElementById('results');
+        const scoreDisplay = document.getElementById('score');
+        const correctAnswersDisplay = document.getElementById('correct-answers');
+        const incorrectAnswersDisplay = document.getElementById('incorrect-answers');
+        const nextSubmitBtn = document.getElementById('next-submit-btn');
+        const questionNavigation = document.getElementById('question-navigation');
+
+        // Hàm để bắt đầu trò chơi
+        function startQuiz() {
+            showQuestion();
+            createQuestionNavigation();
+        }
+
+        // Hàm để hiển thị câu hỏi hiện tại
+        function showQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            quizForm.innerHTML = `
+                <h2>${currentQuestion.question}</h2>
+                ${currentQuestion.answers.map((answer, index) => `
+                    <p><input type="radio" id="option${index + 1}" name="question" value="${answer.text}">
+                    <label for="option${index + 1}">${answer.text}</label></p>
+                `).join('')}`;
+
+            if (currentQuestionIndex === questions.length - 1) {
+                nextSubmitBtn.textContent = "Nộp bài";
+            } else {
+                nextSubmitBtn.textContent = "Tiếp theo";
+            }
+
+            updateQuestionNavigation();
+        }
+
+        // Hàm để kiểm tra câu trả lời và chuyển sang câu hỏi tiếp theo
+        function submitAnswer() {
+            const selectedAnswer = document.querySelector('input[name="question"]:checked');
+            if (selectedAnswer) {
+                const currentQuestion = questions[currentQuestionIndex];
+                userAnswers[currentQuestionIndex] = selectedAnswer.value;
+
+                if (currentQuestion.answers.find(answer => answer.text === selectedAnswer.value && answer.correct)) {
+                    score++;
+                }
+
+                currentQuestionIndex++;
+
+                if (currentQuestionIndex < questions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            } else {
+                alert('Vui lòng chọn một đáp án.');
+            }
+        }
+
+        // Hàm để hiển thị kết quả
+        function showResults() {
+    quizForm.style.display = 'none';
+    resultsSection.style.display = 'block';
+
+    scoreDisplay.textContent = `Bạn đã trả lời đúng ${score}/${questions.length} câu.`;
+    
+    correctAnswersDisplay.innerHTML = '<h3>Các câu trả lời đúng:</h3>' + questions.map((question, index) => {
+        const correctAnswer = question.answers.find(answer => answer.correct).text;
+        return `<p><strong>${index + 1}. ${question.question}</strong><br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+    }).join('');
+    
+    incorrectAnswersDisplay.innerHTML = '<h3>Các câu trả lời sai:</h3>' + questions.map((question, index) => {
+        if (!question.answers.find(answer => answer.text === userAnswers[index] && answer.correct)) {
+            const correctAnswer = question.answers.find(answer => answer.correct).text;
+            return `<p style="color: red;"><strong>${index + 1}. ${question.question}</strong><br>Đáp án của bạn: ${userAnswers[index]}<br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+        }
+        return '';
+    }).join('');
+}
+
+        // Hàm để tạo danh sách câu hỏi
+        function createQuestionNavigation() {
+            questionNavigation.innerHTML = '';
+            for (let i = 0; i < questions.length; i++) {
+                const questionLink = document.createElement('li');
+                questionLink.textContent = i + 1;
+                questionLink.onclick = () => goToQuestion(i);
+                questionNavigation.appendChild(questionLink);
+            }
+        }
+
+        // Hàm để cập nhật danh sách câu hỏi
+        function updateQuestionNavigation() {
+            const questionLinks = questionNavigation.children;
+            for (let i = 0; i < questionLinks.length; i++) {
+                if (userAnswers[i] !== undefined) {
+                    questionLinks[i].style.backgroundColor = 'green';
+                    questionLinks[i].style.color = 'white';
+                } else {
+                    questionLinks[i].style.backgroundColor = 'transparent';
+                    questionLinks[i].style.color = 'black';
+                }
+            }
+        }
+
+        // Hàm để chuyển đến câu hỏi cụ thể
+        function goToQuestion(index) {
+            currentQuestionIndex = index;
+            showQuestion();
+        }
+
+        // Hàm để làm lại bài kiểm tra
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers.length = 0;
+            quizForm.style.display = 'block';
+            resultsSection.style.display = 'none';
+            startQuiz();
+        }
+
+        // Bắt đầu trò chơi
+        startQuiz();
+    </script>
+</body>
+</html>

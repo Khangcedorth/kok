@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="icon" href="BioCheX.png" type="image/x-icon">
+    <title>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</title>
+    <audio id="introAudio">
+        <source src="index.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</head>
+<body>
+<section>
+        
+    <div class="center-text">
+        <img id="chemistry-icon" src="BioCheX.png" alt="Icon Hoá Học">
+        <img id="righticon" src="iconindex.PNG" alt="Icon Hoá Học">
+        <h1 id="first">BioCheX - Hoá Sinh trong đời sống</h1>
+        <div class="custom-button">
+        <marquee behavior="alternate">
+            <marquee style="color:#ffffff; font-weight:bold" width="700px">BIOCHEX - HOÁ SINH TRONG ĐỜI SỐNG</marquee>
+        </marquee>
+        <a class="hometop login_button" href="#" style="color: #fffefd; margin: 0px 0px 0px 0px; width: 27%; text-align: center; font-weight:bold; background:#3366d4;; height: 20px;">
+            <span id="gio">21</span><span>h</span>
+            <span id="phut">26</span><span>'</span>
+            <span id="giay">9</span><span>"</span>
+            <script>
+                function Dong_ho() {
+                    var gio = document.getElementById("gio");
+                    var phut = document.getElementById("phut");
+                    var giay = document.getElementById("giay");
+                    var Gio_hien_tai = new Date().getHours();
+                    var Phut_hien_tai = new Date().getMinutes();
+                    var Giay_hien_tai = new Date().getSeconds();
+                    gio.innerHTML = Gio_hien_tai;
+                    phut.innerHTML = Phut_hien_tai;
+                    giay.innerHTML = Giay_hien_tai;
+                }
+                var Dem_gio = setInterval(Dong_ho, 1000);
+            </script>
+            <script language="javascript" type="text/javascript"> 
+                dayName = new Array ("Chủ nhật","Thứ hai","Thứ ba","Thứ tư","Thứ năm","Thứ sáu","Thứ bảy") 
+                monName = new Array ("1","2","3","4","5","6","7","8","9","10","11","12") 
+                now = new Date 
+                document.write("<b>" +dayName[now.getDay()]+ ", ngày " +now.getDate()+ "/" +monName[now.getMonth()]+ "/" +now.getFullYear()+ "</b>") 
+            </script>
+        </a>
+        </div>
+        <img src="https://png.pngtree.com/thumb_back/fw800/background/20230610/pngtree-science-laboratory-table-top-image_2966084.jpg" alt="Mô tả hình ảnh">
+    </div>
+    <div class="khang">
+        <div class="button-container">
+            <a href="mtruongpH.html" class="custom-button">Tìm hiểu về môi trường qua độ pH</a>
+        </div>
+        <div class="button-container">
+            <a href="trunghoaacid.html" class="custom-button">Thuật toán chuẩn độ acid - base</a>
+        </div>
+        <div class="button-container">
+            <a href="thinghiem.html" class="custom-button">Thí nghiệm hoá học thực tiễn ứng với chương trình Hoá cấp THPT</a>
+        </div>
+    </div>
+    <div class="khang">
+
+    <div class="button-container">
+        <a href="chungst.html" class="custom-button">Tìm hiểu về sinh thiết cơ thể</a>
+    </div>
+    <div class="button-container">
+        <a href="baitap.html" class="custom-button">Bài tập ôn luyện kiến thức về Hoá - Sinh</a>
+    </div>
+    <div class="button-container">
+        <a href="linksach.html" class="custom-button">Link sách giáo khoa mới</a>
+    </div>
+    <div>
+        <div class="button-container">
+            <a href="ai.html" class="custom-button">Phần mềm hỗ trợ học tập (người khiếm thị)</a>
+        </div>
+    </div>
+</div>
+
+    <div>
+        <div class="button-container">
+            <a href="steam.html" class="custom-button">Stem - Hóa Sinh và ứng dụng</a>
+        </div>
+    </div>
+    <div>
+        <div class="button-container">
+            <a href="thithu.html" class="custom-button">Bộ 5 đề thi thử kiến thức Hoá Sinh theo bố cục THPTQG 2025</a>
+        </div>
+    </div>
+   
+</section>
+
+<script>
+    const introAudio = document.getElementById('introAudio');
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'vi-VN'; // Đặt ngôn ngữ tiếng Việt
+
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey) {
+            // Kiểm tra nếu phím "Ctrl" được nhấn
+            if (introAudio.paused) {
+                introAudio.play(); // Phát âm thanh nếu đang dừng
+            } else {
+                introAudio.pause(); // Tạm dừng nếu đang phát
+                introAudio.currentTime = 0; // Đặt lại thời gian phát
+            }
+        } else if (event.key === ' ') {
+            // Kiểm tra nếu phím "Space" được nhấn
+            recognition.start(); // Bắt đầu thu âm
+        }
+    });
+
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript.toLowerCase(); // Chuyển giọng nói thành văn bản và viết thường
+        console.log(transcript); // Xem kết quả thu âm
+
+        if (transcript.includes('ph trong đất')) {
+            window.location.href = 'mtruongpH.html'; // Điều hướng tới trang pH trong đất
+        }
+        if (transcript.includes('chuẩn độ')) {
+            window.location.href = 'trunghoaacid.html'; // Điều hướng tới trang pH trong đất
+        }
+        if (transcript.includes('sinh thiết')) {
+            window.location.href = 'chungst.html'; // Điều hướng tới trang pH trong đất
+        }
+        if (transcript.includes('học tập')) {
+            window.location.href = 'ai.html'; // Điều hướng tới trang pH trong đất
+        }
+        if (transcript.includes('stem')) {
+            window.location.href = 'steam.html'; // Điều hướng tới trang pH trong đất
+        }
+    };
+
+    recognition.onerror = function(event) {
+        console.error('Lỗi nhận diện giọng nói: ', event.error);
+    };
+</script>
+</body>
+<footer>
+    <p>BioCheX - Hoá Sinh trong đời sống. HVT-TNK</p>
+    <img src="BioCheX.png" alt="hinh anh">
+</footer>
+</html>

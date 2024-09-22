@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="BioCheX.png" type="image/x-icon">
+    <title>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</title>
+    <link rel="stylesheet" href="btester.css">
+</head>
+<body>
+    <header>
+        <h1>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Trang chủ</a></li>
+            </ul>
+            <marquee behavior="alternate">
+                <marquee style="color:#ffffff; font-weight:bold" width="700px">I LOVE CHEMISTRY - HOÁ HỌC ĐƯA ĐẾN TƯƠNG LAI</marquee>
+            </marquee>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="quiz">
+            <h2>Câu hỏi</h2>
+            <form id="quiz-form">
+                <!-- Câu hỏi sẽ được hiển thị ở đây -->
+            </form>
+            <button id="next-submit-btn" onclick="submitAnswer()">Nộp bài</button>
+        </section>
+
+        <section id="question-list">
+            <h2>Danh sách câu hỏi</h2>
+            <ul id="question-navigation">
+                <!-- Số câu hỏi sẽ được thêm vào đây -->
+            </ul>
+        </section>
+
+        <section id="results" style="display: none;">
+            <h2>Kết quả</h2>
+            <div id="score"></div>
+            <div id="correct-answers"></div>
+            <div id="incorrect-answers"></div>
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhkNvC9P6pIqkHU2tDhRbPnV3Y36m7NdjiR5GVopADP9PkCHn7E0Mxs2grIyEZ7R66txHJFlQsEg1cNMsuubQ-h0EBUoUtQJ_nlHLc6MAPOiUeZSuDmPATHgLcFG-w3989IWawhrEwoV7bMrRSMmJQmmvcWs0Gdt7nZ2fQmBBRbdFQO7CTOO4XK9Tj7dA/s940/B%E1%BA%A3n%20sao%20c%E1%BB%A7a%20Ngh%C4%A9%20kh%C3%A1c%20%C4%91i%20(B%C3%A0i%20%C4%91%C4%83ng%20Facebook)%20(16).png" alt="Congratulations Image" id="congratulations-image">
+
+            <button onclick="restartQuiz()">Làm lại</button>
+        </section>
+    </main>
+
+    <footer>
+        <ul>
+            <p>BioCheX - Hoá Sinh trong đời sống. HVT-TNK</p>
+        </ul>
+    </footer>
+    <script>
+        // Dữ liệu về các câu hỏi và đáp án
+        const questions = [
+    {
+        question: "Câu 1: Công thức cấu tạo của metan là",
+        answers: [
+            { text: "CH4", correct: true },
+            { text: "CH3-CH3", correct: false },
+            { text: "CH2=CH2", correct: false },
+            { text: "C6H6", correct: false }
+        ],
+        explanation: "Metan có công thức cấu tạo là CH4, với carbon liên kết đơn với bốn nguyên tử hydro."
+    },
+    {
+        question: "Câu 2: Công thức cấu tạo của etan là",
+        answers: [
+            { text: "CH3-CH3", correct: true },
+            { text: "CH4", correct: false },
+            { text: "CH2=CH2", correct: false },
+            { text: "C6H6", correct: false }
+        ],
+        explanation: "Etan có công thức cấu tạo là CH3-CH3."
+    },
+    {
+        question: "Câu 3: Công thức cấu tạo của propan là",
+        answers: [
+            { text: "CH3-CH2-CH3", correct: true },
+            { text: "CH3-CH3", correct: false },
+            { text: "CH3-CH2-CH2-CH3", correct: false },
+            { text: "C6H6", correct: false }
+        ],
+        explanation: "Propan có công thức cấu tạo là CH3-CH2-CH3."
+    },
+    {
+        question: "Câu 4: Công thức cấu tạo của butan là",
+        answers: [
+            { text: "CH3-CH2-CH2-CH3", correct: true },
+            { text: "CH3-CH2-CH3", correct: false },
+            { text: "CH2=CH-CH3", correct: false },
+            { text: "C6H6", correct: false }
+        ],
+        explanation: "Butan có công thức cấu tạo là CH3-CH2-CH2-CH3."
+    },
+    {
+        question: "Câu 5: Công thức cấu tạo của pentan là",
+        answers: [
+            { text: "CH3-CH2-CH2-CH2-CH3", correct: true },
+            { text: "CH3-CH2-CH2-CH3", correct: false },
+            { text: "CH2=CH-CH2-CH3", correct: false },
+            { text: "C6H6", correct: false }
+        ],
+        explanation: "Pentan có công thức cấu tạo là CH3-CH2-CH2-CH2-CH3."
+    },
+    {
+        question: "Câu 6: Công thức cấu tạo của hexan là",
+        answers: [
+            { text: "CH3-CH2-CH2-CH2-CH2-CH3", correct: true },
+            { text: "CH3-CH2-CH2-CH2-CH3", correct: false },
+            { text: "CH2=CH-CH2-CH2-CH3", correct: false },
+            { text: "C6H6", correct: false }
+        ],
+        explanation: "Hexan có công thức cấu tạo là CH3-CH2-CH2-CH2-CH2-CH3."
+    },
+    {
+        question: "Câu 7: Công thức cấu tạo của heptan là",
+        answers: [
+            { text: "CH3-CH2-CH2-CH2-CH2-CH2-CH3", correct: true },
+            { text: "CH3-CH2-CH2-CH2-CH2-CH3", correct: false },
+            { text: "CH2=CH-CH2-CH2-CH2-CH3", correct: false },
+            { text: "C6H6", correct: false }
+        ],
+        explanation: "Heptan có công thức cấu tạo là CH3-CH2-CH2-CH2-CH2-CH2-CH3."
+    },
+    {
+        question: "Câu 8: Công thức cấu tạo của octan là",
+        answers: [
+            { text: "CH3-CH2-CH2-CH2-CH2-CH2-CH2-CH3", correct: true },
+            { text: "CH3-CH2-CH2-CH2-CH2-CH2-CH3", correct: false },
+            { text: "CH2=CH-CH2-CH2-CH2-CH2-CH3", correct: false },
+            { text: "C6H6", correct: false }
+        ],
+        explanation: "Octan có công thức cấu tạo là CH3-CH2-CH2-CH2-CH2-CH2-CH2-CH3."
+    },
+    {
+        question: "Câu 9: Công thức cấu tạo của nonan là",
+        answers: [
+            { text: "CH3-CH2-CH2-CH2-CH2-CH2-CH2-CH2-CH3", correct: true },
+            { text: "CH3-CH2-CH2-CH2-CH2-CH2-CH2-CH3", correct: false },
+            { text: "CH2=CH-CH2-CH2-CH2-CH2-CH2-CH3", correct: false },
+            { text: "C6H6", correct: false }
+        ],
+        explanation: "Nonan có công thức cấu tạo là CH3-CH2-CH2-CH2-CH2-CH2-CH2-CH2-CH3."
+    },
+    {
+        question: "Câu 10: Công thức cấu tạo của decan là",
+        answers: [
+            { text: "CH3-CH2-CH2-CH2-CH2-CH2-CH2-CH2-CH2-CH3", correct: true },
+            { text: "CH3-CH2-CH2-CH2-CH2-CH2-CH2-CH2-CH3", correct: false },
+            { text: "CH2=CH-CH2-CH2-CH2-CH2-CH2-CH2-CH3", correct: false },
+            { text: "C6H6", correct: false }
+        ],
+        explanation: "Decan có công thức cấu tạo là CH3-CH2-CH2-CH2-CH2-CH2-CH2-CH2-CH2-CH3."
+    },
+    {
+        question: "Câu 11: Công thức cấu tạo của isobutan là",
+        answers: [
+            { text: "(CH3)2CH-CH3", correct: true },
+            { text: "CH3-CH2-CH2-CH3", correct: false },
+            { text: "CH2=CH-CH2-CH3", correct: false },
+            { text: "C6H6", correct: false }
+        ],
+        explanation: "Isobutan có công thức cấu tạo là (CH3)2CH-CH3."
+    },
+    {
+        question: "Câu 12: Công thức cấu tạo của neopentan là",
+        answers: [
+            { text: "(CH3)4C", correct: true },
+            { text: "CH3-CH2-CH2-CH2-CH3", correct: false },
+            { text: "CH2=CH-CH2-CH2-CH3", correct: false },
+            { text: "C6H6", correct: false }
+        ],
+        explanation: "Neopentan có công thức cấu tạo là (CH3)4C."
+    },
+    {
+        question: "Câu 13: Công thức cấu tạo của cyclopentan là",
+        answers: [
+            { text: "C5H10 (vòng)", correct: true },
+            { text: "C5H12", correct: false },
+            { text: "C6H6", correct: false },
+            { text: "CH2=CH-CH2-CH3", correct: false }
+        ],
+        explanation: "Cyclopentan có công thức cấu tạo là C5H10 với cấu trúc vòng."
+    },
+    {
+        question: "Câu 14: Công thức cấu tạo của cyclohexan là",
+        answers: [
+            { text: "C6H12 (vòng)", correct: true },
+            { text: "C6H6", correct: false },
+            { text: "C6H14", correct: false },
+            { text: "CH2=CH-CH2-CH3", correct: false }
+        ],
+        explanation: "Cyclohexan có công thức cấu tạo là C6H12 với cấu trúc vòng."
+    },
+    {
+        question: "Câu 15: Công thức cấu tạo của methylcyclohexan là",
+        answers: [
+            { text: "C6H11-CH3", correct: true },
+            { text: "C6H12", correct: false },
+            { text: "C6H6-CH3", correct: false },
+            { text: "C7H14", correct: false }
+        ],
+        explanation: "Methylcyclohexan có công thức cấu tạo là C6H11-CH3."
+    },
+    {
+        question: "Câu 16: Công thức cấu tạo của ethylcyclopentan là",
+        answers: [
+            { text: "C5H9-CH2-CH3", correct: true },
+            { text: "C5H10", correct: false },
+            { text: "C6H6", correct: false },
+            { text: "C7H14", correct: false }
+        ],
+        explanation: "Ethylcyclopentan có công thức cấu tạo là C5H9-CH2-CH3."
+    },
+    {
+        question: "Câu 17: Công thức cấu tạo của naphthalen là",
+        answers: [
+            { text: "C10H8 (hai vòng benzen liên kết)", correct: true },
+            { text: "C6H6", correct: false },
+            { text: "C6H5-CH3", correct: false },
+            { text: "C8H10", correct: false }
+        ],
+        explanation: "Naphthalen có công thức cấu tạo là C10H8 với hai vòng benzen liên kết."
+    },
+    {
+        question: "Câu 18: Công thức cấu tạo của decalin là",
+        answers: [
+            { text: "C10H18 (hai vòng cyclohexan liên kết)", correct: true },
+            { text: "C10H8", correct: false },
+            { text: "C10H20", correct: false },
+            { text: "C10H22", correct: false }
+        ],
+        explanation: "Decalin có công thức cấu tạo là C10H18 với hai vòng cyclohexan liên kết."
+    },
+    {
+        question: "Câu 19: Công thức cấu tạo của isohexan là",
+        answers: [
+            { text: "(CH3)2CH-CH2-CH3", correct: true },
+            { text: "CH3-CH2-CH2-CH2-CH3", correct: false },
+            { text: "CH2=CH-CH2-CH2-CH3", correct: false },
+            { text: "C6H6", correct: false }
+        ],
+        explanation: "Isohexan có công thức cấu tạo là (CH3)2CH-CH2-CH3."
+    },
+    {
+        question: "Câu 20: Công thức cấu tạo của 2-methylpentan là",
+        answers: [
+            { text: "CH3-CH(CH3)-CH2-CH2-CH3", correct: true },
+            { text: "CH3-CH2-CH2-CH2-CH3", correct: false },
+            { text: "CH2=CH-CH2-CH2-CH3", correct: false },
+            { text: "C6H6", correct: false }
+        ],
+        explanation: "2-methylpentan có công thức cấu tạo là CH3-CH(CH3)-CH2-CH2-CH3."
+    }
+];
+
+let currentQuestionIndex = 0;
+        let score = 0;
+        const userAnswers = [];
+
+        const quizForm = document.getElementById('quiz-form');
+        const resultsSection = document.getElementById('results');
+        const scoreDisplay = document.getElementById('score');
+        const correctAnswersDisplay = document.getElementById('correct-answers');
+        const incorrectAnswersDisplay = document.getElementById('incorrect-answers');
+        const nextSubmitBtn = document.getElementById('next-submit-btn');
+        const questionNavigation = document.getElementById('question-navigation');
+
+        // Hàm để bắt đầu trò chơi
+        function startQuiz() {
+            showQuestion();
+            createQuestionNavigation();
+        }
+
+        // Hàm để hiển thị câu hỏi hiện tại
+        function showQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            quizForm.innerHTML = `
+                <h2>${currentQuestion.question}</h2>
+                ${currentQuestion.answers.map((answer, index) => `
+                    <p><input type="radio" id="option${index + 1}" name="question" value="${answer.text}">
+                    <label for="option${index + 1}">${answer.text}</label></p>
+                `).join('')}`;
+
+            if (currentQuestionIndex === questions.length - 1) {
+                nextSubmitBtn.textContent = "Nộp bài";
+            } else {
+                nextSubmitBtn.textContent = "Tiếp theo";
+            }
+
+            updateQuestionNavigation();
+        }
+
+        // Hàm để kiểm tra câu trả lời và chuyển sang câu hỏi tiếp theo
+        function submitAnswer() {
+            const selectedAnswer = document.querySelector('input[name="question"]:checked');
+            if (selectedAnswer) {
+                const currentQuestion = questions[currentQuestionIndex];
+                userAnswers[currentQuestionIndex] = selectedAnswer.value;
+
+                if (currentQuestion.answers.find(answer => answer.text === selectedAnswer.value && answer.correct)) {
+                    score++;
+                }
+
+                currentQuestionIndex++;
+
+                if (currentQuestionIndex < questions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            } else {
+                alert('Vui lòng chọn một đáp án.');
+            }
+        }
+
+        // Hàm để hiển thị kết quả
+        function showResults() {
+    quizForm.style.display = 'none';
+    resultsSection.style.display = 'block';
+
+    scoreDisplay.textContent = `Bạn đã trả lời đúng ${score}/${questions.length} câu.`;
+    
+    correctAnswersDisplay.innerHTML = '<h3>Các câu trả lời đúng:</h3>' + questions.map((question, index) => {
+        const correctAnswer = question.answers.find(answer => answer.correct).text;
+        return `<p><strong>${index + 1}. ${question.question}</strong><br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+    }).join('');
+    
+    incorrectAnswersDisplay.innerHTML = '<h3>Các câu trả lời sai:</h3>' + questions.map((question, index) => {
+        if (!question.answers.find(answer => answer.text === userAnswers[index] && answer.correct)) {
+            const correctAnswer = question.answers.find(answer => answer.correct).text;
+            return `<p style="color: red;"><strong>${index + 1}. ${question.question}</strong><br>Đáp án của bạn: ${userAnswers[index]}<br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+        }
+        return '';
+    }).join('');
+}
+
+
+        // Hàm để tạo danh sách câu hỏi
+        function createQuestionNavigation() {
+            questionNavigation.innerHTML = '';
+            for (let i = 0; i < questions.length; i++) {
+                const questionLink = document.createElement('li');
+                questionLink.textContent = i + 1;
+                questionLink.onclick = () => goToQuestion(i);
+                questionNavigation.appendChild(questionLink);
+            }
+        }
+
+        // Hàm để cập nhật danh sách câu hỏi
+        function updateQuestionNavigation() {
+            const questionLinks = questionNavigation.children;
+            for (let i = 0; i < questionLinks.length; i++) {
+                if (userAnswers[i] !== undefined) {
+                    questionLinks[i].style.backgroundColor = 'green';
+                    questionLinks[i].style.color = 'white';
+                } else {
+                    questionLinks[i].style.backgroundColor = 'transparent';
+                    questionLinks[i].style.color = 'black';
+                }
+            }
+        }
+
+        // Hàm để chuyển đến câu hỏi cụ thể
+        function goToQuestion(index) {
+            currentQuestionIndex = index;
+            showQuestion();
+        }
+
+        // Hàm để làm lại bài kiểm tra
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers.length = 0;
+            quizForm.style.display = 'block';
+            resultsSection.style.display = 'none';
+            startQuiz();
+        }
+
+        // Bắt đầu trò chơi
+        startQuiz();
+    </script>
+</body>
+</html>

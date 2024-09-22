@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="BioCheX.png" type="image/x-icon">
+    <title>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</title>
+    <link rel="stylesheet" href="btester.css">
+</head>
+<body>
+    <header>
+        <h1>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Trang chủ</a></li>
+            </ul>
+            <marquee behavior="alternate">
+                <marquee style="color:#ffffff; font-weight:bold" width="700px">I LOVE CHEMISTRY - HOÁ HỌC ĐƯA ĐẾN TƯƠNG LAI</marquee>
+            </marquee>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="quiz">
+            <h2>Câu hỏi</h2>
+            <form id="quiz-form">
+                <!-- Câu hỏi sẽ được hiển thị ở đây -->
+            </form>
+            <button id="next-submit-btn" onclick="submitAnswer()">Nộp bài</button>
+        </section>
+
+        <section id="question-list">
+            <h2>Danh sách câu hỏi</h2>
+            <ul id="question-navigation">
+                <!-- Số câu hỏi sẽ được thêm vào đây -->
+            </ul>
+        </section>
+
+        <section id="results" style="display: none;">
+            <h2>Kết quả</h2>
+            <div id="score"></div>
+            <div id="correct-answers"></div>
+            <div id="incorrect-answers"></div>
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhkNvC9P6pIqkHU2tDhRbPnV3Y36m7NdjiR5GVopADP9PkCHn7E0Mxs2grIyEZ7R66txHJFlQsEg1cNMsuubQ-h0EBUoUtQJ_nlHLc6MAPOiUeZSuDmPATHgLcFG-w3989IWawhrEwoV7bMrRSMmJQmmvcWs0Gdt7nZ2fQmBBRbdFQO7CTOO4XK9Tj7dA/s940/B%E1%BA%A3n%20sao%20c%E1%BB%A7a%20Ngh%C4%A9%20kh%C3%A1c%20%C4%91i%20(B%C3%A0i%20%C4%91%C4%83ng%20Facebook)%20(16).png" alt="Congratulations Image" id="congratulations-image">
+
+            <button onclick="restartQuiz()">Làm lại</button>
+        </section>
+    </main>
+
+    <footer>
+        <ul>
+            <p>BioCheX - Hoá Sinh trong đời sống. HVT-TNK</p>
+        </ul>
+    </footer>
+    <script>
+        // Dữ liệu về các câu hỏi và đáp án
+        const questions = [
+    {
+        question: "Câu 1: Acid acetic có công thức hóa học là gì?",
+        answers: [
+            { text: "CH3COOH", correct: true },
+            { text: "C2H5OH", correct: false },
+            { text: "C3H7COOH", correct: false },
+            { text: "HCOOH", correct: false }
+        ],
+        explanation: "Acid acetic có công thức hóa học là CH3COOH."
+    },
+    {
+        question: "Câu 2: Nhóm chức của acid carboxylic là nhóm nào?",
+        answers: [
+            { text: "Nhóm -OH", correct: false },
+            { text: "Nhóm -CHO", correct: false },
+            { text: "Nhóm -COOH", correct: true },
+            { text: "Nhóm -COO-", correct: false }
+        ],
+        explanation: "Nhóm chức của acid carboxylic là nhóm carboxyl (-COOH)."
+    },
+    {
+        question: "Câu 3: Acid formic có công thức hóa học là gì?",
+        answers: [
+            { text: "CH3COOH", correct: false },
+            { text: "HCOOH", correct: true },
+            { text: "C2H5COOH", correct: false },
+            { text: "C3H7COOH", correct: false }
+        ],
+        explanation: "Acid formic có công thức hóa học là HCOOH."
+    },
+    {
+        question: "Câu 4: Acid benzoic có công thức hóa học là gì?",
+        answers: [
+            { text: "C6H5COOH", correct: true },
+            { text: "C7H5COOH", correct: false },
+            { text: "C8H5COOH", correct: false },
+            { text: "C6H6COOH", correct: false }
+        ],
+        explanation: "Acid benzoic có công thức hóa học là C6H5COOH."
+    },
+    {
+        question: "Câu 5: Loại liên kết nào đóng vai trò quan trọng trong tính chất acid của acid carboxylic?",
+        answers: [
+            { text: "Liên kết ion", correct: false },
+            { text: "Liên kết cộng hóa trị", correct: false },
+            { text: "Liên kết hydro", correct: true },
+            { text: "Liên kết kim loại", correct: false }
+        ],
+        explanation: "Liên kết hydro đóng vai trò quan trọng trong tính chất acid của acid carboxylic."
+    },
+    {
+        question: "Câu 6: Trong công nghiệp, acid acetic chủ yếu được sử dụng trong lĩnh vực nào?",
+        answers: [
+            { text: "Chế biến thực phẩm", correct: false },
+            { text: "Sản xuất nhựa và sợi tổng hợp", correct: true },
+            { text: "Dược phẩm", correct: false },
+            { text: "Sản xuất nước hoa", correct: false }
+        ],
+        explanation: "Acid acetic chủ yếu được sử dụng trong sản xuất nhựa và sợi tổng hợp."
+    },
+    {
+        question: "Câu 7: Phản ứng nào sau đây là phản ứng chính của acid carboxylic?",
+        answers: [
+            { text: "Phản ứng oxi hóa", correct: false },
+            { text: "Phản ứng khử", correct: false },
+            { text: "Phản ứng este hóa", correct: true },
+            { text: "Phản ứng cộng", correct: false }
+        ],
+        explanation: "Phản ứng este hóa là phản ứng chính của acid carboxylic, tạo ra ester và nước."
+    },
+    {
+        question: "Câu 8: Để chuyển acid carboxylic thành alcohol, phương pháp nào được sử dụng?",
+        answers: [
+            { text: "Oxi hóa", correct: false },
+            { text: "Khử", correct: true },
+            { text: "Phân hủy", correct: false },
+            { text: "Chưng cất", correct: false }
+        ],
+        explanation: "Acid carboxylic có thể được khử thành alcohol bằng cách sử dụng các chất khử mạnh như LiAlH4."
+    },
+    {
+        question: "Câu 9: Tên gọi thông thường của ethanoic acid là gì?",
+        answers: [
+            { text: "Formic acid", correct: false },
+            { text: "Acetic acid", correct: true },
+            { text: "Propanoic acid", correct: false },
+            { text: "Butanoic acid", correct: false }
+        ],
+        explanation: "Tên gọi thông thường của ethanoic acid là acetic acid."
+    },
+    {
+        question: "Câu 10: Acid carboxylic có tính chất nào sau đây?",
+        answers: [
+            { text: "Bazơ mạnh", correct: false },
+            { text: "Trung tính", correct: false },
+            { text: "Acid yếu", correct: true },
+            { text: "Acid mạnh", correct: false }
+        ],
+        explanation: "Acid carboxylic thường là acid yếu."
+    },
+    {
+        question: "Câu 11: Sự khác biệt chính giữa acid carboxylic và ester là gì?",
+        answers: [
+            { text: "Số nguyên tử carbon", correct: false },
+            { text: "Số nguyên tử oxygen", correct: false },
+            { text: "Nhóm chức", correct: true },
+            { text: "Loại liên kết cộng hóa trị", correct: false }
+        ],
+        explanation: "Sự khác biệt chính giữa acid carboxylic và ester là nhóm chức; acid carboxylic có nhóm -COOH, còn ester có nhóm -COO-."
+    },
+    {
+        question: "Câu 12: Phản ứng chính để tạo ra ester từ acid carboxylic và alcohol là gì?",
+        answers: [
+            { text: "Phản ứng oxi hóa", correct: false },
+            { text: "Phản ứng khử", correct: false },
+            { text: "Phản ứng este hóa", correct: true },
+            { text: "Phản ứng cộng", correct: false }
+        ],
+        explanation: "Phản ứng este hóa là phản ứng chính để tạo ra ester từ acid carboxylic và alcohol."
+    },
+    {
+        question: "Câu 13: Để tách biệt acid carboxylic từ hỗn hợp, phương pháp nào thường được sử dụng?",
+        answers: [
+            { text: "Chưng cất", correct: true },
+            { text: "Lọc", correct: false },
+            { text: "Lắng đọng", correct: false },
+            { text: "Kết tinh", correct: false }
+        ],
+        explanation: "Chưng cất là phương pháp thường được sử dụng để tách biệt acid carboxylic từ hỗn hợp do điểm sôi khác nhau của chúng."
+    },
+    {
+        question: "Câu 14: Tên gọi thông thường của propanoic acid là gì?",
+        answers: [
+            { text: "Formic acid", correct: false },
+            { text: "Acetic acid", correct: false },
+            { text: "Propionic acid", correct: true },
+            { text: "Butyric acid", correct: false }
+        ],
+        explanation: "Tên gọi thông thường của propanoic acid là propionic acid."
+    },
+    {
+        question: "Câu 15: Công thức phân tử của butanoic acid là gì?",
+        answers: [
+            { text: "C3H7COOH", correct: false },
+            { text: "C4H9COOH", correct: false },
+            { text: "C4H8O2", correct: true },
+            { text: "C5H10O2", correct: false }
+        ],
+        explanation: "Butanoic acid có công thức phân tử là C4H8O2."
+    },
+    {
+        question: "Câu 16: Loại acid carboxylic nào sau đây thường được dùng làm chất bảo quản thực phẩm?",
+        answers: [
+            { text: "Formic acid", correct: false },
+            { text: "Acetic acid", correct: true },
+            { text: "Benzoic acid", correct: true },
+            { text: "Butanoic acid", correct: false }
+        ],
+        explanation: "Acetic acid và benzoic acid thường được sử dụng làm chất bảo quản thực phẩm."
+    },
+    {
+        question: "Câu 17: Sản phẩm nào sau đây không thể tạo ra từ phản ứng của acid carboxylic với alcohol?",
+        answers: [
+            { text: "Ester", correct: false },
+            { text: "Nước", correct: false },
+            { text: "Alcohol", correct: true },
+            { text: "Acid carboxylic", correct: false }
+        ],
+        explanation: "Phản ứng của acid carboxylic với alcohol tạo ra ester và nước, không tạo ra alcohol."
+    },
+    {
+        question: "Câu 18: Phản ứng chính để tổng hợp acid carboxylic từ aldehyde là gì?",
+        answers: [
+            { text: "Phản ứng oxi hóa", correct: true },
+            { text: "Phản ứng khử", correct: false },
+            { text: "Phản ứng hydro hóa", correct: false },
+            { text: "Phản ứng polymer hóa", correct: false }
+        ],
+        explanation: "Acid carboxylic có thể được tổng hợp từ aldehyde qua phản ứng oxi hóa."
+    },
+    {
+        question: "Câu 19: Trong quá trình tổng hợp ester, vai trò chính của acid sulfuric (H2SO4) là gì?",
+        answers: [
+            { text: "Chất oxi hóa", correct: false },
+            { text: "Chất khử", correct: false },
+            { text: "Chất xúc tác", correct: true },
+            { text: "Dung môi", correct: false }
+        ],
+        explanation: "Acid sulfuric (H2SO4) là chất xúc tác thường được sử dụng trong phản ứng este hóa."
+    },
+    {
+        question: "Câu 20: Hợp chất nào sau đây không thuộc nhóm hợp chất acid carboxylic?",
+        answers: [
+            { text: "Acetic acid", correct: false },
+            { text: "Benzoic acid", correct: false },
+            { text: "Ethanol", correct: true },
+            { text: "Formic acid", correct: false }
+        ],
+        explanation: "Ethanol không thuộc nhóm hợp chất acid carboxylic; nó là một alcohol."
+    }
+];
+let currentQuestionIndex = 0;
+        let score = 0;
+        const userAnswers = [];
+
+        const quizForm = document.getElementById('quiz-form');
+        const resultsSection = document.getElementById('results');
+        const scoreDisplay = document.getElementById('score');
+        const correctAnswersDisplay = document.getElementById('correct-answers');
+        const incorrectAnswersDisplay = document.getElementById('incorrect-answers');
+        const nextSubmitBtn = document.getElementById('next-submit-btn');
+        const questionNavigation = document.getElementById('question-navigation');
+
+        // Hàm để bắt đầu trò chơi
+        function startQuiz() {
+            showQuestion();
+            createQuestionNavigation();
+        }
+
+        // Hàm để hiển thị câu hỏi hiện tại
+        function showQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            quizForm.innerHTML = `
+                <h2>${currentQuestion.question}</h2>
+                ${currentQuestion.answers.map((answer, index) => `
+                    <p><input type="radio" id="option${index + 1}" name="question" value="${answer.text}">
+                    <label for="option${index + 1}">${answer.text}</label></p>
+                `).join('')}`;
+
+            if (currentQuestionIndex === questions.length - 1) {
+                nextSubmitBtn.textContent = "Nộp bài";
+            } else {
+                nextSubmitBtn.textContent = "Tiếp theo";
+            }
+
+            updateQuestionNavigation();
+        }
+
+        // Hàm để kiểm tra câu trả lời và chuyển sang câu hỏi tiếp theo
+        function submitAnswer() {
+            const selectedAnswer = document.querySelector('input[name="question"]:checked');
+            if (selectedAnswer) {
+                const currentQuestion = questions[currentQuestionIndex];
+                userAnswers[currentQuestionIndex] = selectedAnswer.value;
+
+                if (currentQuestion.answers.find(answer => answer.text === selectedAnswer.value && answer.correct)) {
+                    score++;
+                }
+
+                currentQuestionIndex++;
+
+                if (currentQuestionIndex < questions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            } else {
+                alert('Vui lòng chọn một đáp án.');
+            }
+        }
+
+        // Hàm để hiển thị kết quả
+        function showResults() {
+    quizForm.style.display = 'none';
+    resultsSection.style.display = 'block';
+
+    scoreDisplay.textContent = `Bạn đã trả lời đúng ${score}/${questions.length} câu.`;
+    
+    correctAnswersDisplay.innerHTML = '<h3>Các câu trả lời đúng:</h3>' + questions.map((question, index) => {
+        const correctAnswer = question.answers.find(answer => answer.correct).text;
+        return `<p><strong>${index + 1}. ${question.question}</strong><br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+    }).join('');
+    
+    incorrectAnswersDisplay.innerHTML = '<h3>Các câu trả lời sai:</h3>' + questions.map((question, index) => {
+        if (!question.answers.find(answer => answer.text === userAnswers[index] && answer.correct)) {
+            const correctAnswer = question.answers.find(answer => answer.correct).text;
+            return `<p style="color: red;"><strong>${index + 1}. ${question.question}</strong><br>Đáp án của bạn: ${userAnswers[index]}<br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+        }
+        return '';
+    }).join('');
+}
+
+
+        // Hàm để tạo danh sách câu hỏi
+        function createQuestionNavigation() {
+            questionNavigation.innerHTML = '';
+            for (let i = 0; i < questions.length; i++) {
+                const questionLink = document.createElement('li');
+                questionLink.textContent = i + 1;
+                questionLink.onclick = () => goToQuestion(i);
+                questionNavigation.appendChild(questionLink);
+            }
+        }
+
+        // Hàm để cập nhật danh sách câu hỏi
+        function updateQuestionNavigation() {
+            const questionLinks = questionNavigation.children;
+            for (let i = 0; i < questionLinks.length; i++) {
+                if (userAnswers[i] !== undefined) {
+                    questionLinks[i].style.backgroundColor = 'green';
+                    questionLinks[i].style.color = 'white';
+                } else {
+                    questionLinks[i].style.backgroundColor = 'transparent';
+                    questionLinks[i].style.color = 'black';
+                }
+            }
+        }
+
+        // Hàm để chuyển đến câu hỏi cụ thể
+        function goToQuestion(index) {
+            currentQuestionIndex = index;
+            showQuestion();
+        }
+
+        // Hàm để làm lại bài kiểm tra
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers.length = 0;
+            quizForm.style.display = 'block';
+            resultsSection.style.display = 'none';
+            startQuiz();
+        }
+
+        // Bắt đầu trò chơi
+        startQuiz();
+    </script>
+</body>
+</html>

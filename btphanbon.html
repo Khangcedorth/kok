@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="BioCheX.png" type="image/x-icon">
+    <title>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</title>
+    <link rel="stylesheet" href="btester.css">
+</head>
+<body>
+    <header>
+        <h1>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Trang chủ</a></li>
+            </ul>
+            <marquee behavior="alternate">
+                <marquee style="color:#ffffff; font-weight:bold" width="700px">I LOVE CHEMISTRY - HOÁ HỌC ĐƯA ĐẾN TƯƠNG LAI</marquee>
+            </marquee>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="quiz">
+            <h2>Câu hỏi</h2>
+            <form id="quiz-form">
+                <!-- Câu hỏi sẽ được hiển thị ở đây -->
+            </form>
+            <button id="next-submit-btn" onclick="submitAnswer()">Nộp bài</button>
+        </section>
+
+        <section id="question-list">
+            <h2>Danh sách câu hỏi</h2>
+            <ul id="question-navigation">
+                <!-- Số câu hỏi sẽ được thêm vào đây -->
+            </ul>
+        </section>
+
+        <section id="results" style="display: none;">
+            <h2>Kết quả</h2>
+            <div id="score"></div>
+            <div id="correct-answers"></div>
+            <div id="incorrect-answers"></div>
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhkNvC9P6pIqkHU2tDhRbPnV3Y36m7NdjiR5GVopADP9PkCHn7E0Mxs2grIyEZ7R66txHJFlQsEg1cNMsuubQ-h0EBUoUtQJ_nlHLc6MAPOiUeZSuDmPATHgLcFG-w3989IWawhrEwoV7bMrRSMmJQmmvcWs0Gdt7nZ2fQmBBRbdFQO7CTOO4XK9Tj7dA/s940/B%E1%BA%A3n%20sao%20c%E1%BB%A7a%20Ngh%C4%A9%20kh%C3%A1c%20%C4%91i%20(B%C3%A0i%20%C4%91%C4%83ng%20Facebook)%20(16).png" alt="Congratulations Image" id="congratulations-image">
+
+            <button onclick="restartQuiz()">Làm lại</button>
+        </section>
+    </main>
+
+    <footer>
+        <ul>
+            <p>BioCheX - Hoá Sinh trong đời sống. HVT-TNK</p>
+        </ul>
+    </footer>
+    <script>
+        // Dữ liệu về các câu hỏi và đáp án
+        const questions = [
+    {
+        question: "1. Trichoderma là loại vi sinh vật nào?",
+        answers: [
+            { text: "A. Vi khuẩn", correct: false },
+            { text: "B. Nấm", correct: true },
+            { text: "C. Tảo", correct: false },
+            { text: "D. Nấm men", correct: false }
+        ],
+        explanation: "Trichoderma là một loại nấm có khả năng phân giải chất hữu cơ và ức chế sự phát triển của nhiều loại nấm gây bệnh."
+    },
+    {
+        question: "2. Lợi ích chính của Trichoderma trong việc ủ phân là gì?",
+        answers: [
+            { text: "A. Tăng khả năng hấp thụ nước của đất", correct: false },
+            { text: "B. Cung cấp thêm chất dinh dưỡng cho cây", correct: false },
+            { text: "C. Đẩy nhanh quá trình phân hủy hữu cơ", correct: true },
+            { text: "D. Tăng độ kiềm của đất", correct: false }
+        ],
+        explanation: "Trichoderma giúp đẩy nhanh quá trình phân hủy các chất hữu cơ, làm cho phân ủ nhanh chóng phân giải và giàu dinh dưỡng."
+    },
+    {
+        question: "3. Độ ẩm lý tưởng để Trichoderma hoạt động trong quá trình ủ phân là bao nhiêu?",
+        answers: [
+            { text: "A. 20-30%", correct: false },
+            { text: "B. 40-50%", correct: false },
+            { text: "C. 50-60%", correct: true },
+            { text: "D. 70-80%", correct: false }
+        ],
+        explanation: "Độ ẩm lý tưởng cho quá trình ủ phân với Trichoderma là khoảng 50-60%, đảm bảo môi trường thuận lợi cho nấm phát triển."
+    },
+    {
+        question: "4. Nhiệt độ nào dưới đây là tối ưu cho Trichoderma phát triển trong quá trình ủ phân?",
+        answers: [
+            { text: "A. 10-20°C", correct: false },
+            { text: "B. 25-35°C", correct: true },
+            { text: "C. 40-50°C", correct: false },
+            { text: "D. 55-65°C", correct: false }
+        ],
+        explanation: "Nhiệt độ tối ưu để Trichoderma phát triển và hoạt động tốt là từ 25 đến 35°C."
+    },
+    {
+        question: "5. Trichoderma có thể giúp kiểm soát loại sâu bệnh nào?",
+        answers: [
+            { text: "A. Côn trùng gây hại", correct: false },
+            { text: "B. Nấm gây bệnh", correct: true },
+            { text: "C. Vi khuẩn gây bệnh", correct: false },
+            { text: "D. Virus", correct: false }
+        ],
+        explanation: "Trichoderma có khả năng ức chế sự phát triển của nhiều loại nấm gây bệnh cho cây trồng, giúp kiểm soát nấm bệnh."
+    },
+    {
+        question: "6. Khi sử dụng Trichoderma để ủ phân, cần tránh yếu tố nào để không làm giảm hiệu quả?",
+        answers: [
+            { text: "A. Độ ẩm quá cao", correct: true },
+            { text: "B. Nhiệt độ thấp", correct: false },
+            { text: "C. Phơi phân trực tiếp dưới nắng", correct: false },
+            { text: "D. Đảo phân quá nhiều", correct: false }
+        ],
+        explanation: "Độ ẩm quá cao sẽ tạo môi trường yếm khí, không phù hợp cho Trichoderma phát triển. Cần duy trì độ ẩm ở mức lý tưởng."
+    },
+    {
+        question: "7. Thời gian ủ phân tối thiểu khi sử dụng Trichoderma là bao lâu?",
+        answers: [
+            { text: "A. 1 tuần", correct: false },
+            { text: "B. 2 tuần", correct: true },
+            { text: "C. 1 tháng", correct: false },
+            { text: "D. 3 tháng", correct: false }
+        ],
+        explanation: "Thời gian tối thiểu để Trichoderma hoạt động và phân hủy chất hữu cơ hiệu quả là khoảng 2 tuần."
+    },
+    {
+        question: "8. Chất dinh dưỡng nào dưới đây có thể được tăng cường nhờ quá trình ủ phân với Trichoderma?",
+        answers: [
+            { text: "A. Kali", correct: false },
+            { text: "B. Đạm (Nitơ)", correct: true },
+            { text: "C. Photpho", correct: false },
+            { text: "D. Magie", correct: false }
+        ],
+        explanation: "Quá trình ủ phân với Trichoderma giúp gia tăng hàm lượng đạm (Nitơ) trong phân, cung cấp dưỡng chất quan trọng cho cây."
+    },
+    {
+        question: "9. Điều kiện nào dưới đây là cần thiết để Trichoderma phát triển mạnh trong quá trình ủ phân?",
+        answers: [
+            { text: "A. Thiếu ánh sáng", correct: false },
+            { text: "B. Có đủ oxy", correct: true },
+            { text: "C. Độ ẩm thấp", correct: false },
+            { text: "D. Nhiệt độ dưới 10°C", correct: false }
+        ],
+        explanation: "Trichoderma cần có môi trường giàu oxy để phát triển và phân hủy chất hữu cơ hiệu quả."
+    },
+    {
+        question: "10. Việc đảo phân khi ủ có tác dụng gì?",
+        answers: [
+            { text: "A. Tăng độ ẩm", correct: false },
+            { text: "B. Giảm nhiệt độ", correct: false },
+            { text: "C. Cung cấp thêm oxy", correct: true },
+            { text: "D. Giảm chất dinh dưỡng", correct: false }
+        ],
+        explanation: "Đảo phân định kỳ giúp cung cấp thêm oxy cho quá trình phân hủy hữu cơ, tạo điều kiện thuận lợi cho Trichoderma."
+    },
+    {
+        question: "11. Tác dụng chính của Trichoderma trong việc cải thiện chất lượng đất là gì?",
+        answers: [
+            { text: "A. Tăng cường độ kiềm của đất", correct: false },
+            { text: "B. Cải thiện cấu trúc đất", correct: true },
+            { text: "C. Giảm độ chua của đất", correct: false },
+            { text: "D. Làm tăng lượng cát trong đất", correct: false }
+        ],
+        explanation: "Trichoderma giúp phân hủy chất hữu cơ và tạo ra các chất cải thiện cấu trúc đất, giúp đất tơi xốp và giàu dinh dưỡng hơn."
+    },
+    {
+        question: "12. Một trong những dấu hiệu cho thấy quá trình ủ phân với Trichoderma đang hoạt động tốt là gì?",
+        answers: [
+            { text: "A. Nhiệt độ của đống phân tăng cao", correct: true },
+            { text: "B. Đống phân có màu tối hơn", correct: false },
+            { text: "C. Đống phân trở nên cứng hơn", correct: false },
+            { text: "D. Không có mùi", correct: false }
+        ],
+        explanation: "Nhiệt độ tăng là dấu hiệu cho thấy vi sinh vật, bao gồm Trichoderma, đang hoạt động mạnh mẽ trong quá trình phân hủy."
+    },
+    {
+        question: "13. Yếu tố nào dưới đây có thể làm giảm hiệu quả của Trichoderma trong quá trình ủ phân?",
+        answers: [
+            { text: "A. Quá nhiều ánh sáng", correct: false },
+            { text: "B. Thiếu oxy", correct: true },
+            { text: "C. Độ ẩm thấp", correct: false },
+            { text: "D. Nhiệt độ thấp", correct: false }
+        ],
+        explanation: "Thiếu oxy sẽ làm giảm hoạt động của Trichoderma, vì vậy cần đảo phân định kỳ để đảm bảo thông khí."
+    },
+    {
+        question: "14. Trichoderma có khả năng ức chế sự phát triển của loại nấm gây hại nào?",
+        answers: [
+            { text: "A. Nấm Fusarium", correct: true },
+            { text: "B. Nấm Aspergillus", correct: false },
+            { text: "C. Nấm Candida", correct: false },
+            { text: "D. Nấm Saccharomyces", correct: false }
+        ],
+        explanation: "Trichoderma được biết đến với khả năng ức chế sự phát triển của nấm Fusarium - một loại nấm gây hại phổ biến cho cây trồng."
+    },
+    {
+        question: "15. Khi sử dụng phân ủ với Trichoderma, lợi ích chính đối với cây trồng là gì?",
+        answers: [
+            { text: "A. Tăng cường khả năng chống chịu sâu bệnh", correct: true },
+            { text: "B. Tăng khả năng thoát nước của đất", correct: false },
+            { text: "C. Tăng lượng kali trong đất", correct: false },
+            { text: "D. Giảm sự phát triển của rễ", correct: false }
+        ],
+        explanation: "Phân ủ với Trichoderma giúp cây trồng tăng khả năng chống chịu sâu bệnh nhờ vi sinh vật có lợi."
+    },
+    {
+        question: "16. Sau khi ủ phân với Trichoderma, làm thế nào để xác định phân đã sẵn sàng sử dụng?",
+        answers: [
+            { text: "A. Phân có mùi chua", correct: false },
+            { text: "B. Phân có màu nâu sẫm và mịn", correct: true },
+            { text: "C. Phân vẫn còn nhiều mảnh hữu cơ lớn", correct: false },
+            { text: "D. Phân có mùi hôi", correct: false }
+        ],
+        explanation: "Phân đã sẵn sàng khi có màu nâu sẫm, mịn, và không còn mảnh hữu cơ lớn. Phân cũng không có mùi hôi."
+    },
+    {
+        question: "17. Trong quá trình ủ phân với Trichoderma, việc kiểm tra độ ẩm có cần thiết không?",
+        answers: [
+            { text: "A. Có, để đảm bảo Trichoderma hoạt động hiệu quả", correct: true },
+            { text: "B. Không, vì Trichoderma tự điều chỉnh độ ẩm", correct: false },
+            { text: "C. Không, vì quá trình ủ không phụ thuộc vào độ ẩm", correct: false },
+            { text: "D. Có, để ngăn ngừa phân bị khô quá nhanh", correct: false }
+        ],
+        explanation: "Độ ẩm cần được kiểm tra thường xuyên để đảm bảo Trichoderma hoạt động tốt trong quá trình phân hủy hữu cơ."
+    },
+    {
+        question: "18. Việc sử dụng Trichoderma trong ủ phân có an toàn cho môi trường không?",
+        answers: [
+            { text: "A. Không, vì gây ô nhiễm môi trường", correct: false },
+            { text: "B. Có, vì Trichoderma là vi sinh vật có lợi", correct: true },
+            { text: "C. Không, vì nó làm giảm đa dạng sinh học", correct: false },
+            { text: "D. Có, nhưng phải được kiểm soát chặt chẽ", correct: false }
+        ],
+        explanation: "Trichoderma là vi sinh vật có lợi, giúp phân hủy chất hữu cơ và không gây hại cho môi trường."
+    },
+    {
+        question: "19. Khi ủ phân với Trichoderma, có cần thêm các loại vi sinh vật khác không?",
+        answers: [
+            { text: "A. Không cần, Trichoderma đủ để phân hủy", correct: false },
+            { text: "B. Có thể bổ sung để tăng hiệu quả", correct: true },
+            { text: "C. Cần thêm nấm men", correct: false },
+            { text: "D. Không, vì Trichoderma làm việc một mình", correct: false }
+        ],
+        explanation: "Bổ sung thêm các loại vi sinh vật khác có thể tăng cường hiệu quả phân hủy và cải thiện chất lượng phân."
+    },
+    {
+        question: "20. Tại sao Trichoderma lại được sử dụng phổ biến trong nông nghiệp hữu cơ?",
+        answers: [
+            { text: "A. Vì dễ dàng mua bán trên thị trường", correct: false },
+            { text: "B. Vì khả năng phân hủy chất hữu cơ và ức chế nấm bệnh", correct: true },
+            { text: "C. Vì giá thành rẻ", correct: false },
+            { text: "D. Vì có thể thay thế hoàn toàn phân hóa học", correct: false }
+        ],
+        explanation: "Trichoderma được sử dụng phổ biến trong nông nghiệp hữu cơ nhờ khả năng phân hủy chất hữu cơ và kiểm soát nấm bệnh."
+    },
+    {
+        question: "21. Trichoderma phát triển mạnh nhất trong môi trường có tính chất nào?",
+        answers: [
+            { text: "A. Môi trường khô và nhiều nắng", correct: false },
+            { text: "B. Môi trường ẩm và giàu hữu cơ", correct: true },
+            { text: "C. Môi trường kiềm", correct: false },
+            { text: "D. Môi trường chứa nhiều kim loại", correct: false }
+        ],
+        explanation: "Trichoderma phát triển mạnh trong môi trường ẩm và giàu chất hữu cơ, tạo điều kiện tốt cho quá trình phân hủy."
+    }
+];
+
+let currentQuestionIndex = 0;
+        let score = 0;
+        const userAnswers = [];
+
+        const quizForm = document.getElementById('quiz-form');
+        const resultsSection = document.getElementById('results');
+        const scoreDisplay = document.getElementById('score');
+        const correctAnswersDisplay = document.getElementById('correct-answers');
+        const incorrectAnswersDisplay = document.getElementById('incorrect-answers');
+        const nextSubmitBtn = document.getElementById('next-submit-btn');
+        const questionNavigation = document.getElementById('question-navigation');
+
+        // Hàm để bắt đầu trò chơi
+        function startQuiz() {
+            showQuestion();
+            createQuestionNavigation();
+        }
+
+        // Hàm để hiển thị câu hỏi hiện tại
+        function showQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            quizForm.innerHTML = `
+                <h2>${currentQuestion.question}</h2>
+                ${currentQuestion.answers.map((answer, index) => `
+                    <p><input type="radio" id="option${index + 1}" name="question" value="${answer.text}">
+                    <label for="option${index + 1}">${answer.text}</label></p>
+                `).join('')}`;
+
+            if (currentQuestionIndex === questions.length - 1) {
+                nextSubmitBtn.textContent = "Nộp bài";
+            } else {
+                nextSubmitBtn.textContent = "Tiếp theo";
+            }
+
+            updateQuestionNavigation();
+        }
+
+        // Hàm để kiểm tra câu trả lời và chuyển sang câu hỏi tiếp theo
+        function submitAnswer() {
+            const selectedAnswer = document.querySelector('input[name="question"]:checked');
+            if (selectedAnswer) {
+                const currentQuestion = questions[currentQuestionIndex];
+                userAnswers[currentQuestionIndex] = selectedAnswer.value;
+
+                if (currentQuestion.answers.find(answer => answer.text === selectedAnswer.value && answer.correct)) {
+                    score++;
+                }
+
+                currentQuestionIndex++;
+
+                if (currentQuestionIndex < questions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            } else {
+                alert('Vui lòng chọn một đáp án.');
+            }
+        }
+
+        // Hàm để hiển thị kết quả
+        function showResults() {
+    quizForm.style.display = 'none';
+    resultsSection.style.display = 'block';
+
+    scoreDisplay.textContent = `Bạn đã trả lời đúng ${score}/${questions.length} câu.`;
+    
+    correctAnswersDisplay.innerHTML = '<h3>Các câu trả lời đúng:</h3>' + questions.map((question, index) => {
+        const correctAnswer = question.answers.find(answer => answer.correct).text;
+        return `<p><strong>${index + 1}. ${question.question}</strong><br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+    }).join('');
+    
+    incorrectAnswersDisplay.innerHTML = '<h3>Các câu trả lời sai:</h3>' + questions.map((question, index) => {
+        if (!question.answers.find(answer => answer.text === userAnswers[index] && answer.correct)) {
+            const correctAnswer = question.answers.find(answer => answer.correct).text;
+            return `<p style="color: red;"><strong>${index + 1}. ${question.question}</strong><br>Đáp án của bạn: ${userAnswers[index]}<br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+        }
+        return '';
+    }).join('');
+}
+
+
+        // Hàm để tạo danh sách câu hỏi
+        function createQuestionNavigation() {
+            questionNavigation.innerHTML = '';
+            for (let i = 0; i < questions.length; i++) {
+                const questionLink = document.createElement('li');
+                questionLink.textContent = i + 1;
+                questionLink.onclick = () => goToQuestion(i);
+                questionNavigation.appendChild(questionLink);
+            }
+        }
+
+        // Hàm để cập nhật danh sách câu hỏi
+        function updateQuestionNavigation() {
+            const questionLinks = questionNavigation.children;
+            for (let i = 0; i < questionLinks.length; i++) {
+                if (userAnswers[i] !== undefined) {
+                    questionLinks[i].style.backgroundColor = 'green';
+                    questionLinks[i].style.color = 'white';
+                } else {
+                    questionLinks[i].style.backgroundColor = 'transparent';
+                    questionLinks[i].style.color = 'black';
+                }
+            }
+        }
+
+        // Hàm để chuyển đến câu hỏi cụ thể
+        function goToQuestion(index) {
+            currentQuestionIndex = index;
+            showQuestion();
+        }
+
+        // Hàm để làm lại bài kiểm tra
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers.length = 0;
+            quizForm.style.display = 'block';
+            resultsSection.style.display = 'none';
+            startQuiz();
+        }
+
+        // Bắt đầu trò chơi
+        startQuiz();
+    </script>
+</body>
+</html>

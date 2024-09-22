@@ -1,0 +1,476 @@
+= vbnm,./`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="BioCheX.png" type="image/x-icon">
+    <title>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</title>
+    <link rel="stylesheet" href="btester.css">
+</head>
+<body>
+    <header>
+        <h1>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Trang chủ</a></li>
+            </ul>
+            <marquee behavior="alternate">
+                <marquee style="color:#ffffff; font-weight:bold" width="700px">I LOVE CHEMISTRY - HOÁ HỌC ĐƯA ĐẾN TƯƠNG LAI</marquee>
+            </marquee>
+        </nav>
+    </header>
+    
+   <main>
+        <section id="quiz">
+            <h2>Câu hỏi</h2>
+            <form id="quiz-form">
+                <!-- Câu hỏi sẽ được hiển thị ở đây -->
+            </form>
+            <button id="next-submit-btn" onclick="submitAnswer()">Nộp bài</button>
+        </section>
+
+        <section id="question-list">
+            <h2>Danh sách câu hỏi</h2>
+            <ul id="question-navigation">
+                <!-- Số câu hỏi sẽ được thêm vào đây -->
+            </ul>
+        </section>
+
+        <section id="results" style="display: none;">
+            <h2>Kết quả</h2>
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhkNvC9P6pIqkHU2tDhRbPnV3Y36m7NdjiR5GVopADP9PkCHn7E0Mxs2grIyEZ7R66txHJFlQsEg1cNMsuubQ-h0EBUoUtQJ_nlHLc6MAPOiUeZSuDmPATHgLcFG-w3989IWawhrEwoV7bMrRSMmJQmmvcWs0Gdt7nZ2fQmBBRbdFQO7CTOO4XK9Tj7dA/s940/B%E1%BA%A3n%20sao%20c%E1%BB%A7a%20Ngh%C4%A9%20kh%C3%A1c%20%C4%91i%20(B%C3%A0i%20%C4%91%C4%83ng%20Facebook)%20(16).png" alt="Congratulations Image" id="congratulations-image">
+            <div id="score"></div>
+            <div id="correct-answers"></div>
+            <div id="incorrect-answers"></div>
+            <button onclick="restartQuiz()">Làm lại</button>
+        </section>
+    </main>
+
+    <footer>
+        <ul>
+                <p>BioCheX - Hoá Sinh trong đời sống. HVT-TNK</p>
+        </ul>
+    </footer>
+    <script>
+        // Dữ liệu về các câu hỏi và đáp án
+        const questions = [
+            {
+               question: "Câu 1: Hợp chất nào dưới đây thuộc loại amino acid?",
+                answers: [
+                    { text: "H2NCH2COOH.", correct: true },
+                    { text: "CH3COOC2H5.", correct: false },
+                    { text: "C2H5NH2.", correct: false},
+                    { text: "HCOONH4.", correct: false }
+                ],
+                explanation: "Amino acid là hợp chất hữu cơ tạp chức, phân tử chứa đồng thời nhóm amino (-NH2) và nhóm carboxyl (-COOH)."
+            },
+            {
+question: "Câu 2: Tổng số nguyên tử trong 1 phân tử alanine là",
+                answers: [
+                    { text: "10.", correct: false },
+                    { text: "12.", correct: false },
+                    { text: "13.", correct:true},
+                    { text: "11.", correct: false }
+                ],
+                explanation: "CTCT của alanine là CH3CH(NH2)COOH nên CTPT là C3H7O2N nên tổng số nguyên tử là 13."
+            },
+            {
+question: "Câu 3: Số đồng phân amino acid của C3H7O2N là",
+                answers: [
+                    { text: "1.", correct: false },
+                    { text: "4.", correct: false },
+                    { text: "3.", correct: false},
+                    { text: "2.", correct: true }
+                ],
+                explanation: "Số đồng phân amino acid của C3H7O2N là 2: H2NCH2CH2COOH và CH3CH(NH2)COOH."
+            },
+            {
+question: "Câu 4: Amino acid X có phân tử khối bằng 75 amu. Tên của X là",
+                answers: [
+                    { text: "lysine.", correct: false },
+                    { text: "alanine.", correct: false},
+                    { text: "valine.", correct: false},
+                    { text: "glycine.", correct: true }
+                ],
+                explanation: "Amino acid X có phân tử khối bằng 75 amu. Tên của X là glycine (H2NCH2COOH)."
+            },
+            {
+question: "Câu 5: α-Amino acid X có phân tử khối bằng 89 amu. Tên gọi của X là",
+                answers: [
+                    { text: "lysine.", correct: false },
+                    { text: "alanine.", correct: true },
+                    { text: "valine.", correct: false},
+                    { text: "glycine.", correct: false}
+                ],
+                explanation: "α-Amino acid Xcó phân tử khối bằng 89 amu. Tên của X là alanine (CH3CH(NH2)COOH)."
+            },
+            {
+question: "Câu 6: Alanine có công thức cấu tạo thu gọn là",
+                answers: [
+                    { text: "H2NCH2COOH.", correct: false },
+                    { text: "H2NCH2CH2COOH.", correct: false },
+                    { text: "H2NCH2CH(NH2)COOH.", correct: false},
+                    { text: "CH3CH(NH2)COOH.", correct: true }
+                ],
+                explanation: "Alanine có công thức cấu tạo thu gọn là CH3CH(NH2)COOH."
+            },
+            {
+question: "Câu 7: Amino acid có phân tử khối nhỏ nhất là",
+                answers: [
+                    { text: "lysine.", correct: false },
+                    { text: "alanine.", correct: false},
+                    { text: "valine.", correct: false},
+                    { text: "glycine.", correct: true }
+                ],
+                explanation: "Amino acid có phân tử khối nhỏ nhất (đơn giản nhất) là glycine (M=75)"
+            },
+            {
+question: "Câu 8: Hợp chất H2N-CH2-CH2-CH2-CH2-CH(NH2)-COOH có tên bán hệ thống là",
+                answers: [
+                    { text: "α,ω-diaminocaproic acid.", correct: false },
+                    { text: "α,ε-diaminocaproic acid.", correct: true },
+                    { text: "α,ε-diaminoenanthic acid.", correct: false},
+                    { text: "lysine.", correct: false }
+                ],
+                explanation: "Hợp chất H2N-CH2-CH2-CH2-CH2-CH(NH2)-COOH có tên bán hệ thống là α,ε-diaminocaproic acid."
+            },
+            {
+question: "Câu 9: Glutamic acid có công thức cấu tạo nào sau đây?",
+                answers: [
+                    { text: "H2N-[CH2]4-CH(NH2)-COOH.", correct: false },
+                    { text: "HOOC-[CH2]2-CH(NH2)-COOH.", correct: false },
+                    { text: "(CH3)2CH-CH(NH2)-COOH", correct: false},
+                    { text: "HOOC-[CH2]3-CH(NH2)-COOH.", correct: true }
+                ],
+                explanation: "Glutamic acid có công thức cấu tạo là HOOC-[CH2]3-CH(NH2)-COOH."
+            },
+            {
+question: "Câu 10: Một α-amino acid có ký hiệu là Glu. Vậy tên nào sau đây không đúng với amino acid đó?",
+                answers: [
+                    { text: "α-aminoglutaric acid.", correct: false },
+                    { text: "Glucosamine.", correct: true },
+                    { text: "Glutamic acid.", correct: false},
+                    { text: "2-aminopentane-1,5-dioic acid.", correct: false }
+                ],
+explanation: "Một α-amino acid có ký hiệu là Glu là kí hiệu viết tắt của glutamic acid hay  α-aminoglutaric acid hay 2-aminopentane-1,5-dioic acid."
+            },
+            {
+question: "Câu 11: Trong các chất sau, chất có nhiệt độ nóng chảy cao nhất là",
+                answers: [
+                    { text: "HCOOCH3.", correct: false },
+                    { text: "NH2CH2COOH.", correct: true },
+                    { text: "C2H5NH2.", correct: false},
+                    { text: "CH3CH2OH.", correct: false}
+                ],
+                explanation: "Các amino acid đều có nhiệt độ nóng chảy cao."
+            },             {
+question: "Câu 12: Chất có trạng thái khác với các chất còn lại ở điều kiện thường là",
+                answers: [
+                    { text: "glutamic acid", correct: false },
+                    { text: "methylamine.", correct: true },
+                    { text: "alanine. ", correct: false},
+                    { text: "tripalmitin.", correct: false}
+                ],
+                explanation: "Methylamine là chất khí, các chất còn lại là chất rắn ở điều kiện thường."
+            },
+            {
+question: "Câu 13: Trong dung dịch H2N – CH2 – COOH tồn tại chủ yếu ở dạng",
+                answers: [
+                    { text: "anion.", correct: false },
+                    { text: "ion lưỡng cực. ", correct: true },
+                    { text: "cation.", correct: false},
+                    { text: "phân tử trung hòa.", correct: false}
+                ],
+                explanation: "Trong dung dịch H2N – CH2 – COOH tồn tại chủ yếu ở dạng ion lưỡng cực H3N+ – CH2 – COO-."
+            },
+            {
+question: "Câu 14: Để chứng minh amino acid có tính chất lưỡng tính, có thể dùng phản ứng của chất này lần lượt với",
+                answers: [
+                    { text: "Dung dịch Na2SO4 và dung dịch HCl.", correct: false },
+                    { text: "Dung dịch KOH và dung dịch CuO.", correct: false },
+                    { text: "Dung dịch NaOH và dung dịch NH3.", correct: false},
+                    { text: "Dung dịch KOH và dung dịch HCl. ", correct: true}
+                ],
+                explanation: "Để chứng minh amino acid có tính chất lưỡng tính, có thể dùng phản ứng của chất này lần lượt với dung dịch acid mạnh và base mạnh."
+            },
+            {
+question: "Câu 15: Glycine không tác dụng với",
+                answers: [
+                    { text: "H2SO4 loãng.", correct: false },
+                    { text: "dung dịch NaOH.", correct: true },
+                    { text: "C2H5OH.", correct: false},
+                    { text: "NaCl.", correct: false }
+                ],
+                explanation: "Glycine  tác dụng với H2SO4 loãng và dung dịch NaOH (tính lưỡng tính), pahnr ứng với C2H5OH (pứ tạo ester) nên không phản ứng với NaCl."
+            },
+            {
+question: "Câu 16: Cho các dãy chuyển hóa: Glycine + HCl ⟶ X1; X1 + NaOH dư ⟶ X2. Vậy X2 là",
+                answers: [
+                    { text: "ClH3NCH2COOH.", correct: false },
+                    { text: "ClH3NCH2COONa.", correct: false },
+                    { text: "H2NCH2COOH.", correct: false},
+                    { text: "H2NCH2COONa.", correct: true }
+                ],
+                explanation: "Glycine + HCl ⟶ ClH3NCH2COOH; ClH3NCH2COOH + 2NaOH dư ⟶ H2NCH2COONa  + NaCl + 2H2O."
+            },
+            {
+              question: "Câu 17: Cho sơ đồ: Alanine + NaOH⟶  X; X+ HCl⟶ Y . (X, Y là chất hữu cơ, HCl dư). Công thức của Y là",
+                answers: [
+                    { text: "H2N-CH(CH3)-COONa.", correct: false },
+                    { text: "ClH3N-CH(CH3)-COOH", correct: true },
+                    { text: "ClH3N-CH(CH3)-COONa.", correct: false},
+                    { text: "ClH3N-CH2-CH2-COOH.", correct: false }
+                ],
+                explanation: "H2N-CH(CH3)-COOH+ NaOH⟶  H2N-CH(CH3)-COONa + H2O; H2N-CH(CH3)-COONa+ 2HCl⟶ ClH3N-CH(CH3)-COOH + NaCl"
+            },
+            {
+A. question: "Câu 18: Khi đặt ở pH = 6 trong một điện trường, các chất nào sau đây đều tồn tại chủ yếu ở dạng ion lưỡng cực và hầu như không di chuyển về cực dương hoặc cực âm?",
+                answers: [
+                    { text: "Glutamic acid, glycine, alanine.", correct: false },
+                    { text: "Alanine, glycine, valine..", correct: true },
+                    { text: "Lysine, alanine, glycine.", correct: false},
+                    { text: "Glutamic acid, glycine, valine.", correct: false }
+                ],
+                explanation: "Do cấu tạo có 1 nhóm -NH2 và 1 nhóm -COOH, glycine, alanine, valine tồn tại chủ yếu ở dạng ion lưỡng cực nên có tổng điện tích bằng 0 nên hầu như không di chuyển"
+            },
+            {
+question: "Câu 19: Khi đặt ở pH = 6 trong một điện trường, amino acid nào sau đây di chuyển về cực dương? ",
+                answers: [
+                    { text: "Glycine.", correct: false },
+                    { text: "Alanine.", correct: false },
+                    { text: "Lysine.", correct: false },
+                    { text: "Glutamic acid.", correct: true}
+                ],
+                explanation: "Do cấu tạo có 1 nhóm -NH2 và 2 nhóm -COOH, glutamic acid có tính acid và nhường proton nên tồn tại chủ yếu ở dạng anion ⟶ di chuyển về phía cực dương (+)"
+            },
+            {
+question: "Câu 20: Khi đặt ở pH = 6 trong một điện trường, amino acid nào sau đây di chuyển về cực âm? ",
+                answers: [
+                    { text: "Glycine.", correct: false },
+                    { text: "Alanine.", correct: false },
+                    { text: "Lysine.", correct: true },
+                    { text: "Glutamic acid.", correct: false}
+                ],
+                explanation: "Do cấu tạo có 2 nhóm -NH2 và 1 nhóm -COOH, lysine có tính base và nhận proton nên tồn tại chủ yếu ở dạng cation ⟶ di chuyển về phía cực âm (–)."
+            },
+            {
+ question: "Câu 21: Thực hiện phản ứng ester hóa giữa alanine với methanol trong HCl khan, đun nóng sản phẩm hữu cơ thu được là",
+                answers: [
+                    { text: "ClH3N-CH2-COO-C2H5.", correct: false},
+                    { text: "H2N-CH(CH3)-COO-CH3.", correct: false },
+                    { text: "H2N-CH(CH3)-COO-C2H5.", correct: false } 
+                    { text: "ClH3N-CH(CH3)-COO-CH3.", correct: true },  
+                ],
+                explanation: "Thực hiện phản ứng ester hóa giữa alanine với methanol trong HCl khan, đun nóng sản phẩm hữu cơ thu được là ClH3N-CH(CH3)-COO-CH3 và H2O."
+            },
+ question: "Câu 22:Trong một phản ứng của amino acid, nhóm -COOH ở phân tử này phản ứng với nhóm -NH2 của phân tử khác gọi là phản ứng nào?",
+                answers: [
+                    { text: "trùng hợp.", correct: false},
+                    { text: "trùng ngưng. ", correct: true},
+                    { text: "thủy phân.", correct: false } 
+                    { text: "trung hòa.", correct: false },  
+                ],
+                explanation: "Trong một phản ứng của amino acid, nhóm -COOH ở phân tử này phản ứng với nhóm -NH2 của phân tử khác gọi là phản ứng trùng ngưng."
+            },
+ question: "Câu 23:Phát biểu nào sau đây là đúng khi nói về amino acid ? 
+                    { text: "Có khả năng phản ứng với dung dịch HCl và nhưng không phản ứng với dung dịch NaOH.", correct: false},
+                    { text: "Amino acid tồn tại trong thiên nhiên thường là α-amino acid.", correct: true  },
+                    { text: "Hầu hết ở thể rắn, ít tan trong nước.", correct: false } 
+                    { text: "Là hợp chất hữu cơ đa chức.", correct: false},            
+                ],
+                explanation: "Amino acid có tính lưỡng tính (tác dụng được với cả HCl và NaOH).Amino acid ở thể rắn, tan tốt trong nước và là hợp chất hữu cơ tạp chức (chứa đồng thời nhóm NH2 (amino) và nhóm COOH (nhóm carboxyl)."
+            },
+ question: "Câu 24: Cho các chất sau: Na, HCl, CaCO3, NaOH, CH3OH/HCl khan. Số chất phản ứng với dung dịch aminoacetic acid là",
+                answers: [
+                    { text: "2.", correct: false},
+                    { text: "2.", correct: false },
+                    { text: "3.", correct: false } 
+                    { text: "5.", correct: true },
+                ],
+                explanation: "Aminoacetic acid phản ứng được với tất cả các chất."
+            },
+ 
+ question: "Câu 25: Cho dãy các chất: H2NCH2COOH, C6H5NH2, CH3COOH, (CH3)3N. Số chất trong dãy phản ứng với HCl trong dung dịch là",
+                answers: [
+                    { text: "1.", correct: false},
+                    { text: "2.", correct: false},
+                    { text: "3.", correct: true  } 
+                    { text: "4.", correct: false },  
+                ],
+              explanation: "Số chất trong dãy phản ứng với HCl trong dung dịch là H2NCH2COOH, C6H5NH2,(CH3)3N."            },
+  question: "Câu 26:Phát biểu nào sau đây sai?",
+                answers: [
+                    { text: "Ở điều kiện thường, amino acid là chất rắn kết tinh", correct: false },
+                    { text: "Glycine, valine, lysine trong phân tử đều có một nhóm amino và một nhóm carboxyl.", correct: true },
+                    { text: "Trùng ngưng ε-aminocaproic acid thu được polycaproamide.", correct: false},
+                    { text: "Amino acid có phản ứng với dung dịch NaOH và dung dịch HCl.", correct: false }
+                ],
+                explanation: "Lysine trong phân tử có hai  nhóm amino và một nhóm carboxyl."
+            },
+
+		     question: "Câu 27: Phát biểu nào sau đây là đúng?",
+                answers: [
+                    { text: "Glutamic acid là thành phần chính của bột ngọt.", correct: false },
+                    { text: "Amino acid thuộc loại hợp chất hữu cơ tạp chức.", correct: true },
+                    { text: "Các amino acid thiên nhiên hầu hết là các β- amino acid.", correct: false},
+                    { text: "Ở nhiệt độ thường, các amino acid đều là những chất lỏng.", correct: false }
+                ],
+                explanation: "Muối monosodium của glutamic acid là thành phần chính của bột ngọt. Các amino acid thiên nhiên hầu hết là các α- amino acid. Ở nhiệt độ thường, các amino acid đều là những chất rắn (tinh thể)."
+            },
+		    question: "Câu 28:Cho hai hợp chất hữu cơ X, Y có cùng công thức phân tử là C3H7NO2. Khi phản ứng với dung dịch NaOH, X tạo ra H2NCH2COONa và chất hữu cơ Z; còn Y tạo ra CH2=CHCOONa và khí T. Các chất Z và T lần lượt là",
+                   answers: [
+                    { text: "CH3NH2 và NH3.", correct: false},
+                    { text: "CH3OH và NH3.", correct: true },
+                    { text: "C2H5OH và N2.", correct: false} 
+                    { text: "CH3OH và CH3NH2.", correct: false },  
+                ],
+                explanation: "X là H2NCH2COOCH3; Y là  CH2=CHCOONH4."
+            },            
+        ];
+question: "Câu 29: Để phản ứng hết với m gam glycine (H2NCH2COOH) cần vừa đủ 100 ml dung dịch NaOH 1M. Giá trị của m là",
+                answers: [
+                   { text: "11,25.", correct: false},
+                    { text: "15,00 .", correct: false },
+                    { text: "7,50.", correct: true} 
+                    { text: "3,75.", correct: false }, 
+                ],
+                explanation: "mglycine = 0,1.75 = 7,5 (g)."
+            },            
+        ];
+question: "Câu 30: α-amino acid X chứa một nhóm -NH2. Cho 10,3 gam X tác dụng với dung dịch HCl (dư), thu được 13,95 gam muối khan. Công thức cấu tạo thu gọn của X là ",
+                answers: [
+                    { text: "H2NCH2COOH.", correct: false},
+                    { text: "CH3CH(NH2)COOH.", correct:false},
+                    { text: "H2NCH2CH2COOH.", correct: false} 
+                    { text: "CH3CH2CH(NH2)COOH.", correct: true }, 
+               ],
+                explanation: "nX = (13,,95-10,3)/36,5 = 0,1 (mol). MX = 10,3/0,1 = 103 (g/mol)"
+            },            
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const userAnswers = [];
+
+        const quizForm = document.getElementById('quiz-form');
+        const resultsSection = document.getElementById('results');
+        const scoreDisplay = document.getElementById('score');
+        const correctAnswersDisplay = document.getElementById('correct-answers');
+        const incorrectAnswersDisplay = document.getElementById('incorrect-answers');
+        const nextSubmitBtn = document.getElementById('next-submit-btn');
+        const questionNavigation = document.getElementById('question-navigation');
+
+        // Hàm để bắt đầu trò chơi
+        function startQuiz() {
+            showQuestion();
+            createQuestionNavigation();
+        }
+
+        // Hàm để hiển thị câu hỏi hiện tại
+        function showQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            quizForm.innerHTML = `
+                <h2>${currentQuestion.question}</h2>
+                ${currentQuestion.answers.map((answer, index) => `
+                    <p><input type="radio" id="option${index + 1}" name="question" value="${answer.text}">
+                    <label for="option${index + 1}">${answer.text}</label></p>
+                `).join('')}`;
+
+            if (currentQuestionIndex === questions.length - 1) {
+                nextSubmitBtn.textContent = "Nộp bài";
+            } else {
+                nextSubmitBtn.textContent = "Tiếp theo";
+            }
+
+            updateQuestionNavigation();
+        }
+
+        // Hàm để kiểm tra câu trả lời và chuyển sang câu hỏi tiếp theo
+        function submitAnswer() {
+            const selectedAnswer = document.querySelector('input[name="question"]:checked');
+            if (selectedAnswer) {
+                const currentQuestion = questions[currentQuestionIndex];
+                userAnswers[currentQuestionIndex] = selectedAnswer.value;
+
+                if (currentQuestion.answers.find(answer => answer.text === selectedAnswer.value && answer.correct)) {
+                    score++;
+                }
+
+                currentQuestionIndex++;
+
+                if (currentQuestionIndex < questions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            } else {
+                alert('Vui lòng chọn một đáp án.');
+            }
+        }
+
+        // Hàm để hiển thị kết quả
+        function showResults() {
+            quizForm.style.display = 'none';
+            resultsSection.style.display = 'block';
+
+            scoreDisplay.textContent = `Bạn đã trả lời đúng ${score}/${questions.length} câu.`;
+            correctAnswersDisplay.innerHTML = '<h3>Các câu trả lời đúng:</h3>' + questions.map((question, index) => {
+                const correctAnswer = question.answers.find(answer => answer.correct).text;
+                return `<p><strong>${index + 1}. ${question.question}</strong><br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+            }).join('');
+            incorrectAnswersDisplay.innerHTML = '<h3>Các câu trả lời sai:</h3>' + questions.map((question, index) => {
+                if (!question.answers.find(answer => answer.text === userAnswers[index] && answer.correct)) {
+                    const correctAnswer = question.answers.find(answer => answer.correct).text;
+                    return `<p><strong>${index + 1}. ${question.question}</strong><br>Đáp án của bạn: ${userAnswers[index]}<br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+                }
+                return '';
+            }).join('');
+        }
+
+        // Hàm để tạo danh sách câu hỏi
+        function createQuestionNavigation() {
+            questionNavigation.innerHTML = '';
+            for (let i = 0; i < questions.length; i++) {
+                const questionLink = document.createElement('li');
+                questionLink.textContent = i + 1;
+                questionLink.onclick = () => goToQuestion(i);
+                questionNavigation.appendChild(questionLink);
+            }
+        }
+
+        // Hàm để cập nhật danh sách câu hỏi
+        function updateQuestionNavigation() {
+            const questionLinks = questionNavigation.children;
+            for (let i = 0; i < questionLinks.length; i++) {
+                if (userAnswers[i] !== undefined) {
+                    questionLinks[i].style.backgroundColor = 'green';
+                    questionLinks[i].style.color = 'white';
+                } else {
+                    questionLinks[i].style.backgroundColor = 'transparent';
+                    questionLinks[i].style.color = 'black';
+                }
+            }
+        }
+
+        // Hàm để chuyển đến câu hỏi cụ thể
+        function goToQuestion(index) {
+            currentQuestionIndex = index;
+            showQuestion();
+        }
+
+        // Hàm để làm lại bài kiểm tra
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers.length = 0;
+            quizForm.style.display = 'block';
+            resultsSection.style.display = 'none';
+            startQuiz();
+        }
+
+        // Bắt đầu trò chơi
+        startQuiz();
+    </script>
+</body>
+</html>
+

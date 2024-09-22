@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="BioCheX.png" type="image/x-icon">
+    <title>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</title>
+    <link rel="stylesheet" href="btester.css">
+</head>
+<body>
+    <header>
+        <h1>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Trang chủ</a></li>
+            </ul>
+            <marquee behavior="alternate">
+                <marquee style="color:#ffffff; font-weight:bold" width="700px">I LOVE CHEMISTRY - HOÁ HỌC ĐƯA ĐẾN TƯƠNG LAI</marquee>
+            </marquee>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="quiz">
+            <h2>Câu hỏi</h2>
+            <form id="quiz-form">
+                <!-- Câu hỏi sẽ được hiển thị ở đây -->
+            </form>
+            <button id="next-submit-btn" onclick="submitAnswer()">Nộp bài</button>
+        </section>
+
+        <section id="question-list">
+            <h2>Danh sách câu hỏi</h2>
+            <ul id="question-navigation">
+                <!-- Số câu hỏi sẽ được thêm vào đây -->
+            </ul>
+        </section>
+
+        <section id="results" style="display: none;">
+            <h2>Kết quả</h2>
+            <div id="score"></div>
+            <div id="correct-answers"></div>
+            <div id="incorrect-answers"></div>
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhkNvC9P6pIqkHU2tDhRbPnV3Y36m7NdjiR5GVopADP9PkCHn7E0Mxs2grIyEZ7R66txHJFlQsEg1cNMsuubQ-h0EBUoUtQJ_nlHLc6MAPOiUeZSuDmPATHgLcFG-w3989IWawhrEwoV7bMrRSMmJQmmvcWs0Gdt7nZ2fQmBBRbdFQO7CTOO4XK9Tj7dA/s940/B%E1%BA%A3n%20sao%20c%E1%BB%A7a%20Ngh%C4%A9%20kh%C3%A1c%20%C4%91i%20(B%C3%A0i%20%C4%91%C4%83ng%20Facebook)%20(16).png" alt="Congratulations Image" id="congratulations-image">
+
+            <button onclick="restartQuiz()">Làm lại</button>
+        </section>
+    </main>
+
+    <footer>
+        <ul>
+            <p>BioCheX - Hoá Sinh trong đời sống. HVT-TNK</p>
+        </ul>
+    </footer>
+    <script>
+        // Dữ liệu về các câu hỏi và đáp án
+        const questions = [
+    {
+        question: "Câu 1: Vai trò chính của hệ bài tiết là gì?",
+        answers: [
+            { text: "Điều hòa huyết áp", correct: false },
+            { text: "Tiêu hóa thức ăn", correct: false },
+            { text: "Loại bỏ chất thải ra khỏi cơ thể", correct: true },
+            { text: "Vận chuyển khí", correct: false },
+        ],
+        explanation: "Hệ bài tiết có vai trò chính là loại bỏ các chất thải ra khỏi cơ thể để duy trì sự cân bằng nội môi."
+    },
+    {
+        question: "Câu 2: Thận có vai trò gì trong quá trình bài tiết?",
+        answers: [
+            { text: "Hấp thụ dinh dưỡng từ thức ăn", correct: false },
+            { text: "Sản xuất hormone", correct: false },
+            { text: "Điều hòa nhịp tim", correct: false },
+            { text: "Lọc máu và tạo nước tiểu", correct: true },
+
+        ],
+        explanation: "Thận lọc máu để loại bỏ các chất thải và tạo ra nước tiểu."
+    },
+    {
+        question: "Câu 3: Đơn vị chức năng của thận là gì?",
+        answers: [
+            { text: "Alveolus", correct: false },
+            { text: "Nephron", correct: true },
+            { text: "Neuron", correct: false },
+            { text: "Lobule", correct: false }
+        ],
+        explanation: "Nephron là đơn vị chức năng của thận, nơi diễn ra quá trình lọc máu và tạo nước tiểu."
+    },
+    {
+        question: "Câu 4: Cấu trúc nào không phải là một phần của nephron?",
+        answers: [
+            { text: "Bowman's capsule", correct: false },
+            { text: "Loop of Henle", correct: false },
+            { text: "Collecting duct", correct: false },
+            { text: "Alveolus", correct: true }
+        ],
+        explanation: "Alveolus không phải là một phần của nephron mà là cấu trúc của phổi."
+    },
+    {
+        question: "Câu 5: Hormone nào giúp điều chỉnh lượng nước trong cơ thể?",
+        answers: [
+            { text: "Insulin", correct: false },
+            { text: "Glucagon", correct: false },
+            { text: "ADH (Antidiuretic hormone)", correct: true },
+            { text: "Thyroxine", correct: false },
+        ],
+        explanation: "ADH giúp thận giữ lại nước, điều chỉnh lượng nước trong cơ thể."
+    },
+    {
+        question: "Câu 6: Chất nào được thận tái hấp thu để duy trì cân bằng pH máu?",
+        answers: [
+            { text: "Na+ (Natrium)", correct: false },
+            { text: "K+ (Kali)", correct: false },
+            { text: "HCO3- (Bicarbonate)", correct: true },
+            { text: "Ca2+ (Calcium)", correct: false },
+        ],
+        explanation: "Thận tái hấp thu bicarbonate để duy trì cân bằng pH máu."
+    },
+    {
+        question: "Câu 7: Hệ bài tiết gồm những cơ quan nào?",
+        answers: [
+            { text: "Thận, niệu quản, bàng quang, niệu đạo", correct: true },
+            { text: "Tim, phổi, gan, thận", correct: false },
+            { text: "Dạ dày, ruột non, ruột già", correct: false },
+            { text: "Gan, túi mật, tuyến tụy", correct: false },
+        ],
+        explanation: "Hệ bài tiết gồm thận, niệu quản, bàng quang và niệu đạo."
+    },
+    {
+        question: "Câu 8: Chức năng chính của bàng quang là gì?",
+        answers: [
+            { text: "Lọc máu", correct: false },
+            { text: "Tiêu hóa protein", correct: false },
+            { text: "Lưu trữ nước tiểu trước khi thải ra ngoài", correct: true },
+            { text: "Sản xuất hồng cầu", correct: false },
+        ],
+        explanation: "Bàng quang lưu trữ nước tiểu trước khi thải ra ngoài cơ thể."
+    },
+    {
+        question: "Câu 9: Cân bằng nội môi là gì?",
+        answers: [
+            { text: "Là quá trình tiêu hóa thức ăn", correct: false },
+            { text: "Là phản ứng của cơ thể với nhiễm trùng", correct: false },
+            { text: "Là duy trì môi trường bên trong cơ thể ổn định", correct: true },
+            { text: "Là quá trình hô hấp tế bào", correct: false },
+        ],
+        explanation: "Cân bằng nội môi là quá trình duy trì môi trường bên trong cơ thể ổn định."
+    },
+    {
+        question: "Câu 10: Hormone nào giúp thận tái hấp thu nước?",
+        answers: [
+            { text: "ADH (Antidiuretic hormone)", correct: true },
+            { text: "Insulin", correct: false },
+            { text: "Epinephrine", correct: false },
+            { text: "Cortisol", correct: false }
+        ],
+        explanation: "ADH giúp thận tái hấp thu nước để duy trì lượng nước trong cơ thể."
+    },
+    {
+        question: "Câu 11: Thận điều hòa cân bằng điện giải bằng cách nào?",
+        answers: [
+            { text: "Tái hấp thu hoặc bài tiết các ion như Na+, K+, Ca2+", correct: true },
+            { text: "Sản xuất hormone", correct: false },
+            { text: "Phân hủy protein", correct: false },
+            { text: "Lưu trữ glycogen", correct: false },
+        ],
+        explanation: "Thận điều hòa cân bằng điện giải bằng cách tái hấp thu hoặc bài tiết các ion như Na+, K+, Ca2+."
+    },
+    {
+        question: "Câu 12: Yếu tố nào ảnh hưởng đến tốc độ lọc cầu thận?",
+        answers: [
+            { text: "Huyết áp trong mao mạch cầu thận", correct: true },
+            { text: "Nồng độ glucose trong máu", correct: false },
+            { text: "Lượng protein tiêu thụ", correct: false },
+            { text: "Lượng nước uống vào", correct: false },
+        ],
+        explanation: "Huyết áp trong mao mạch cầu thận ảnh hưởng đến tốc độ lọc cầu thận."
+    },
+    {
+        question: "Câu 13: Quá trình tái hấp thu xảy ra ở đâu trong nephron?",
+        answers: [
+            { text: "Bowman's capsule", correct: false },
+            { text: "Quai Henle", correct: false },
+            { text: "Ống lượn gần, quai Henle, ống lượn xa, và ống góp", correct: true },
+            { text: "Ống lượn gần", correct: false },
+        ],
+        explanation: "Quá trình tái hấp thu xảy ra ở ống lượn gần, quai Henle, ống lượn xa, và ống góp trong nephron."
+    },
+    {
+        question: "Câu 14: Nước tiểu được dẫn từ thận đến bàng quang qua đâu?",
+        answers: [
+            { text: "Niệu đạo", correct: false },
+            { text: "Ống lượn xa", correct: false },
+            { text: "Niệu quản", correct: true },
+            { text: "Ống góp", correct: false },
+        ],
+        explanation: "Nước tiểu được dẫn từ thận đến bàng quang qua niệu quản."
+    },
+    {
+        question: "Câu 15: Quai Henle chịu trách nhiệm chính trong việc tái hấp thu nước?",
+        answers: [
+            { text: "Đúng", correct: true },
+            { text: "Sai", correct: false },
+        ],
+        explanation: "Quai Henle chịu trách nhiệm chính trong việc tái hấp thu nước trong nephron."
+    },
+    {
+        question: "Câu 16: Hấp thu, chuyển hóa, và bài tiết là quá trình nào tạo ra nước tiểu?",
+        answers: [
+            { text: "Đúng", correct: false },
+            { text: "Sai", correct: true },
+        ],
+        explanation: "Quá trình tạo ra nước tiểu bao gồm ba giai đoạn: lọc, tái hấp thu, và bài tiết."
+    },
+    {
+        question: "Câu 17: Hormone ADH làm giảm lượng nước tiểu bằng cách tăng tái hấp thu nước ở thận?",
+        answers: [
+            { text: "Đúng", correct: true },
+            { text: "Sai", correct: false },
+        ],
+        explanation: "ADH làm giảm lượng nước tiểu bằng cách tăng tái hấp thu nước ở thận."
+    },
+    {
+        question: "Câu 18: Thận bài tiết chất thải là (Proteins và lipids) ra ngoài cơ thể?",
+        answers: [
+            { text: "Đúng", correct: false },
+            { text: "Sai", correct: true },
+        ],
+        explanation: "Thận bài tiết các chất thải như urea, creatinine, và acid uric ra ngoài cơ thể."
+    },
+    {
+        question: "Câu 19: Sự mất cân bằng nội môi có thể dẫn đến : các bệnh lý và rối loạn chức năng cơ thể?",
+        answers: [
+            { text: "Đúng", correct: false },
+            { text: "Sai", correct: true },
+        ],
+        explanation: "Sự mất cân bằng nội môi có thể dẫn đến các bệnh lý và rối loạn chức năng cơ thể."
+    },
+    {
+        question: "Câu 20: Aldosterone có tác dụng tăng tái hấp thu Na+ và thải K+ ở thận đối với thận?",
+        answers: [
+            { text: "Đúng", correct: false },
+            { text: "Sai", correct: true },
+        ],
+        explanation: "Aldosterone tăng tái hấp thu Na+ và thải K+ ở thận, góp phần điều hòa cân bằng điện giải."
+    }
+];
+
+        // Hàm kiểm tra đáp án
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const userAnswers = [];
+
+        const quizForm = document.getElementById('quiz-form');
+        const resultsSection = document.getElementById('results');
+        const scoreDisplay = document.getElementById('score');
+        const correctAnswersDisplay = document.getElementById('correct-answers');
+        const incorrectAnswersDisplay = document.getElementById('incorrect-answers');
+        const nextSubmitBtn = document.getElementById('next-submit-btn');
+        const questionNavigation = document.getElementById('question-navigation');
+
+        // Hàm để bắt đầu trò chơi
+        function startQuiz() {
+            showQuestion();
+            createQuestionNavigation();
+        }
+
+        // Hàm để hiển thị câu hỏi hiện tại
+        function showQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            quizForm.innerHTML = `
+                <h2>${currentQuestion.question}</h2>
+                ${currentQuestion.answers.map((answer, index) => `
+                    <p><input type="radio" id="option${index + 1}" name="question" value="${answer.text}">
+                    <label for="option${index + 1}">${answer.text}</label></p>
+                `).join('')}`;
+
+            if (currentQuestionIndex === questions.length - 1) {
+                nextSubmitBtn.textContent = "Nộp bài";
+            } else {
+                nextSubmitBtn.textContent = "Tiếp theo";
+            }
+
+            updateQuestionNavigation();
+        }
+
+        // Hàm để kiểm tra câu trả lời và chuyển sang câu hỏi tiếp theo
+        function submitAnswer() {
+            const selectedAnswer = document.querySelector('input[name="question"]:checked');
+            if (selectedAnswer) {
+                const currentQuestion = questions[currentQuestionIndex];
+                userAnswers[currentQuestionIndex] = selectedAnswer.value;
+
+                if (currentQuestion.answers.find(answer => answer.text === selectedAnswer.value && answer.correct)) {
+                    score++;
+                }
+
+                currentQuestionIndex++;
+
+                if (currentQuestionIndex < questions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            } else {
+                alert('Vui lòng chọn một đáp án.');
+            }
+        }
+
+        // Hàm để hiển thị kết quả
+        function showResults() {
+    quizForm.style.display = 'none';
+    resultsSection.style.display = 'block';
+
+    scoreDisplay.textContent = `Bạn đã trả lời đúng ${score}/${questions.length} câu.`;
+    
+    correctAnswersDisplay.innerHTML = '<h3>Các câu trả lời đúng:</h3>' + questions.map((question, index) => {
+        const correctAnswer = question.answers.find(answer => answer.correct).text;
+        return `<p><strong>${index + 1}. ${question.question}</strong><br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+    }).join('');
+    
+    incorrectAnswersDisplay.innerHTML = '<h3>Các câu trả lời sai:</h3>' + questions.map((question, index) => {
+        if (!question.answers.find(answer => answer.text === userAnswers[index] && answer.correct)) {
+            const correctAnswer = question.answers.find(answer => answer.correct).text;
+            return `<p style="color: red;"><strong>${index + 1}. ${question.question}</strong><br>Đáp án của bạn: ${userAnswers[index]}<br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+        }
+        return '';
+    }).join('');
+}
+
+
+        // Hàm để tạo danh sách câu hỏi
+        function createQuestionNavigation() {
+            questionNavigation.innerHTML = '';
+            for (let i = 0; i < questions.length; i++) {
+                const questionLink = document.createElement('li');
+                questionLink.textContent = i + 1;
+                questionLink.onclick = () => goToQuestion(i);
+                questionNavigation.appendChild(questionLink);
+            }
+        }
+
+        // Hàm để cập nhật danh sách câu hỏi
+        function updateQuestionNavigation() {
+            const questionLinks = questionNavigation.children;
+            for (let i = 0; i < questionLinks.length; i++) {
+                if (userAnswers[i] !== undefined) {
+                    questionLinks[i].style.backgroundColor = 'green';
+                    questionLinks[i].style.color = 'white';
+                } else {
+                    questionLinks[i].style.backgroundColor = 'transparent';
+                    questionLinks[i].style.color = 'black';
+                }
+            }
+        }
+
+        // Hàm để chuyển đến câu hỏi cụ thể
+        function goToQuestion(index) {
+            currentQuestionIndex = index;
+            showQuestion();
+        }
+
+        // Hàm để làm lại bài kiểm tra
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers.length = 0;
+            quizForm.style.display = 'block';
+            resultsSection.style.display = 'none';
+            startQuiz();
+        }
+
+        // Bắt đầu trò chơi
+        startQuiz();
+    </script>
+</body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="BioCheX.png" type="image/x-icon">
+    <title>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</title>
+    <link rel="stylesheet" href="styleai.css">
+</head>
+<body>
+    <section>
+        <div class="center-text">
+            <h1 id="first">AIchemX - AI hỗ trợ học sinh khiếm thị học Hóa - Sinh</h1>
+            <marquee behavior="alternate">
+                <marquee style="color:#e60b0b; font-weight:bold" width="700px">I LOVE CHEMISTRY - HOÁ HỌC ĐƯA ĐẾN TƯƠNG LAI</marquee>
+            </marquee>
+        </div>
+        <div id="voice-recognition">
+            <div id="result" contenteditable="true">Nội dung thu được từ âm thanh của bạn sẽ hiển thị ở đây....</div>
+            <button onclick="startRecognition()">Bắt đầu nhận diện giọng nói</button>
+        </div>
+        <div class="container">
+            <img src="https://seami.vn/wp-content/uploads/2021/03/giong-noi-khac-thu-am-1-1-1200x650.jpg" alt="Hình ảnh" id="image">
+        </div>
+        
+        <!-- Thêm âm thanh vào HTML -->
+        <audio id="beepSound">
+            <source src="beep.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+        <!-- Âm thanh tùy chỉnh khi nhận diện thành công -->
+        <audio id="customSound">
+            <source src="dung.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+        <!-- Âm thanh khi trang web được tải -->
+        <audio id="introAudio">
+            <source src="intro.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+        <!-- Âm thanh khi không nhận được giọng nói hoặc không tìm thấy lệnh tương ứng -->
+        <audio id="errorSound">
+            <source src="mcAI.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+    <script>
+        const introAudio = document.getElementById('introAudio');
+
+        document.addEventListener('keydown', function(event) {
+            // Kiểm tra nếu phím "Ctrl" được nhấn
+            if (event.ctrlKey) {
+                if (introAudio.paused) {
+                    introAudio.play(); // Phát âm thanh nếu đang dừng
+                } else {
+                    introAudio.pause(); // Tạm dừng nếu đang phát
+                    introAudio.currentTime = 0; // Đặt lại thời gian phát
+                }
+            } else if (event.code === 'Space' && event.target === document.body) {
+                // Ngăn chặn sự kiện mặc định và bắt đầu nhận diện giọng nói khi nhấn phím Space
+                event.preventDefault();
+                startRecognition();
+            }
+        });
+
+        function startRecognition() {
+            // Tạo đối tượng nhận diện giọng nói
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'vi-VN'; // Đặt ngôn ngữ tiếng Việt
+            recognition.continuous = false; // Ngừng nhận diện sau khi nói xong
+            recognition.interimResults = false; // Không hiển thị kết quả tạm thời
+
+            // Lấy đối tượng âm thanh
+            const beepSound = document.getElementById('beepSound');
+            const customSound = document.getElementById('customSound');
+            const errorSound = document.getElementById('errorSound');
+            const resultDiv = document.getElementById('result');
+
+            // Bắt đầu nhận diện
+            recognition.start();
+
+            resultDiv.textContent = 'Đang nghe...';
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                resultDiv.textContent = 'Bạn đã nói: ' + transcript;
+
+                // Phát âm thanh khi nhận được giọng nói
+                beepSound.play();
+
+                // Kiểm tra và phát âm thanh tương ứng
+                if (handleCommand(transcript)) {
+                    // Phát âm thanh tùy chỉnh khi nhận diện thành công
+                    customSound.play();
+                } else {
+                    // Phát âm thanh khi không nhận được lệnh phù hợp
+                    errorSound.play();
+                }
+            };
+
+            recognition.onerror = function(event) {
+                resultDiv.textContent = 'Đã xảy ra lỗi trong quá trình nhận diện: ' + event.error;
+                errorSound.play(); // Phát âm thanh lỗi khi có lỗi trong quá trình nhận diện
+            };
+
+            recognition.onend = function() {
+                if (resultDiv.textContent === 'Đang nghe...') {
+                    resultDiv.textContent = 'Không nhận diện được giọng nói. Hãy thử lại.';
+                    errorSound.play(); // Phát âm thanh khi không nhận được giọng nói
+                }
+            };
+        }
+
+
+        function handleCommand(command) {
+            command = command.toLowerCase();
+            if (command.includes('thí nghiệm thành phần nguyên tử')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=IT7K1MYr_6g';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            }
+            else if (command.includes('obitan')) {
+                const youtubeURL = 'https://youtube.com/watch?v=ifG0Ca6xy6Y';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video YouTube)';
+            } 
+            else if (command.includes('thành phần nguyên tử')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=ur3h5pC9kDU';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            }
+            else if (command.includes('nguyên tố hóa học')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=tGqZyWpCB50';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('lớp phân lớp cấu hình electron')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=OcqJ769TRt4';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('cấu tạo bảng tuần hoàn hóa học')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=wAQ3N_JLHHE';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('xu hướng biến đổi tính chất của đơn chất, biến đổi thành phần và tính chất của hợp chất trong một chu kỳ và một nhóm')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=knUF_ROYOOc';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('định luật tuần hoàn ')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=pguqYBibNWk';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('quy tắc octet')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=0__oPyRLzOE';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('liên kết ion')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=yvooSRrH8V0';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('liên kết cộng hóa trị')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=Kauz9hd2aXg';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('liên kết hydrogen và tương tác van der waals')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=CM5K6WsnAH4';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('phản ứng ôxi hóa khử')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=pf1XfNZHvyY';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('phản ứng hóa học và enthalpy')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=KAyuw5V8nFM';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('ý nghĩa và cách tính biến thiên enthalpy phản ứng hóa học')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=24Cypqf4XlI';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('tốc độ phản ứng ')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=s4mY1Phnm44';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('nguyên tố và đơn chất halogen')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=Q-Iw_uiSnn0';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('hydrogen halide và hydrohalic acid')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=7g3ItX4Ywp0';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('mở đầu về cân bằng ')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=I3vi02MHRrA';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('Sự điện li')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=Nn1hl0b3q5s';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('pH của dung dịch')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=Df5ZANC2N04';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('đơn chất nitrogen')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=V0RPvZS9tzo';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('một số hợp chất quan trọng của nitrogen')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=OHyLu2gaxsk';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('sunfur và sunfur dioxide')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=t6LXUvvZO6A';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('sunfuric axic và muối ')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=95Ki5_EDpWM';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('hợp chất hữu cơ và hóa học hữu cơ')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=9l9f6_OlT7Y';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('phương pháp tách biệt')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=xfwn1kT6XQY';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('công thức phân tử hợp chất hữu cơ')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=ls8bibGl_bY';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('cấu tạo hợp chất hữu cơ')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=p7rP16R9LkE';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('các nguyên tố hoá học và nước')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=s4mY1Phnm44';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            } 
+            else if (command.includes('hydrocarbon không no')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=MRrrOX93Udc';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('ankan')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=PuSZVTqSwuQ&t=1100s';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('aren')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=NIJg_RtjssQ';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('dẫn xuất halogen')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=r0Ru5926XTA';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('ancol')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=Fp0ribbcWbA';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('phenol')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=jmEAbPljLMQ';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('hợp chất cacbonyl')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=w5-KNF-rkUY';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('carboxylic acid')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=sdR_q_AYjtc';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('este lipit')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=8nfiPbueiPI';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('xà phòng và giặt rửa')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=C3jy7oHOmM8';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('glucozơ và fructozơ')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=XLPKhuRhCBc&t=73s';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('saccarozơ và mantozơ')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=XelD6r5_n_c&t=59s';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('tinh bột và xenlulozơ')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=FpEp0NWB4_M';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('amino axit và peptit')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=7lW6UpVFJVE';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            }
+            else if (command.includes('phân tử sinh học')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=lxpTGtnvz14';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            } 
+            else if (command.includes('tế bào nhân sơ')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=Jj9T02Hhlfk';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            } 
+            else if (command.includes('tế bào nhân thực')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=A6VimSiNVU8';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            } 
+            else if (command.includes('trao đổi chất qua màng tế bào')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=McuwUF-vTE4';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            } 
+            else if (command.includes('truyền tin tế bào')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=evmLSg206_I';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            } 
+            else if (command.includes('khái quát về chuyển hoá vật chất')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=z4_nhIE_GtU';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            } 
+            else if (command.includes('phân giải tổng hợp các chất')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=-6kh5s4GJDE&t=168s';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            } 
+            else if (command.includes('nguyên phân')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=sMsEoI4DnRg';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video thí nghiệm trên YouTube)';
+            } 
+            else if (command.includes('giảm phân')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=9-NYmGHnt_A&t=982s';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            }
+            else if (command.includes('công nghệ tế bào')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=2GTyfIKKQV8&t=106s';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('nghiên cứu vi sinh vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=oMztysoLGhY';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('nghiên cứu vi sinh vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=oMztysoLGhY';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('sinh sản vi sinh vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=JDOfBw8Bj30&t=86s';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('ứng dụng vi sinh vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=PPm8xxdxqy8';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('khái quát virus')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=K-alh2yV5Zg';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            }
+            else if (command.includes('một số bệnh do virus')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=lZsrAeOU-sg';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('trao đổi chất và chuyển hóa năng lượng')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=3ygMMjwwdUg';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('trao đổi nước và khoáng')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=rKFHY55PGnE';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('Quang hợp ở thực vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=MtLWYKWWvAog';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('hô hấp ở thực vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=fIebmhZ5yAk';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('dinh dưỡng tiêu hóa ở động vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=3ygMMjwwdUg';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('Tuần hoàn ở động vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=CR8PxoD6Ehc';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('miễn dịch ở động vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=KP-vYbsDHiI';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('bài tiết và cân bằng nội môi')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=67OPoFijYWg';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('cảm ứng ở sinh vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=E6dPTVfUHic';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('cảm ứng ở thực vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=mYhgrNUgyFA';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('cảm ứng ở động vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=O8AQ36x5Bk8';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('tập tính ở động vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=5hf2XrMHXcM&t=276s';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('sinh trưởng và phát triển ở sinh vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=bIbVVlXWDPo';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('sinh trưởng và phát triển ở động vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=ab35AElO_ac&t=155s';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('sinh sản ở sinh vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=nmCv7UJij-k';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('sinh sản ở thực vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=nmCv7UJij-k';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('sinh sản ở động vật')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=u8w19I3y8cY';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật ')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=ZA2cqMYYxOU';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('một số ngành liên quan đến sinh học cơ thể')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=N2T5ayrJESc';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('DNA và cơ chế tái bản DNA')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=n-wrLEku6oA';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('Truyền đạt thông tin di truyền.')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('điều hòa biểu hiện gene')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=Lgs3AwhLTJ0';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('đột biến gene')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=gKjCW8Nlhx0';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else if (command.includes('công nghệ di truyền')) {
+                const youtubeURL = 'https://www.youtube.com/watch?v=lSxAD_SmBIg';
+                window.open(youtubeURL, '_blank'); // Mở video YouTube trong tab mới
+                resultDiv.textContent += ' (Đã mở video trên YouTube)';
+            } 
+            else {
+                return false;
+            }
+        }
+
+        function playBeepSound() {
+            beepSound.currentTime = 0; // Đặt lại thời gian chơi về 0 để phát lại âm thanh từ đầu
+            beepSound.play();
+        }
+
+        function playCustomSound() {
+            customSound.currentTime = 0; // Đặt lại thời gian chơi về 0 để phát lại âm thanh từ đầu
+            customSound.play();
+        }
+
+        function playErrorSound() {
+            errorSound.currentTime = 0; // Đặt lại thời gian chơi về 0 để phát lại âm thanh từ đầu
+            errorSound.play();
+        }
+    </script>
+</body>
+</html>

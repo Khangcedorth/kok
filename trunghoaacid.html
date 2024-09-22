@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="BioCheX.png" type="image/x-icon">
+    <title>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</title>
+    <link rel="stylesheet" href="styletrunghoa.css">
+</head>
+<body>
+    <section>
+        <div class="center-text">
+            <h1 id="first">BioCheX - Hoá Sinh trong đời sống</h1>
+            <marquee behavior="alternate">
+                <marquee style="color:#000000; font-weight:bold" width="700px">I LOVE CHEMISTRY - HOÁ HỌC ĐƯA ĐẾN TƯƠNG LAI</marquee>
+            </marquee>
+        </div>
+        <label for="acidName">Nhập tên acid:</label>
+        <input type="text" id="acidName">
+        <label for="acidConcentration">Nồng độ acid (mol/L):</label>
+        <input type="number" id="acidConcentration" step="any">
+        <div>
+            <label for="acidVolume">Thể tích dung dịch acid (lít):</label>
+            <input type="number" id="acidVolume" step="any">
+        </div>
+        <button onclick="processInput()">Kiểm tra</button>
+
+        <p id="result">Kết quả độ pH có trong acid: </p>
+        <p id="acidStrength">Tính chất của dung dịch acid:</p>
+        <p id="neutralize">Loại base tác dụng trung hòa: </p>
+        <div id="concentrationVolume">Nồng độ và thể tích: </div>
+        <img src="https://www.shutterstock.com/image-photo/scientist-conducting-acidbase-titration-lab-600nw-2285165693.jpg" alt="Hình ảnh" id="image">
+
+        <script>
+            function processInput() {
+                var acidName = document.getElementById("acidName").value.trim().toUpperCase();
+                var acidConcentration = parseFloat(document.getElementById("acidConcentration").value);
+                var acidVolume = parseFloat(document.getElementById("acidVolume").value);
+
+                var resultElement = document.getElementById("result");
+                var acidStrengthElement = document.getElementById("acidStrength");
+                var neutralizeElement = document.getElementById("neutralize");
+                var concentrationVolumeElement = document.getElementById("concentrationVolume");
+                concentrationVolumeElement.innerHTML = ""; // Clear previous content
+
+                if (!acidName || isNaN(acidConcentration) || isNaN(acidVolume)) {
+                    alert("Vui lòng nhập đầy đủ và chính xác các thông tin.");
+                    return;
+                }
+
+                if (!acidName.startsWith("H")) {
+                    alert("Vui lòng thử lại vì tên acid không đúng");
+                    return;
+                }
+
+                var strongAcids = ["HCL", "HBR", "HI", "HNO3", "HCLO4", "H2SO4"];
+                var isStrongAcid = strongAcids.includes(acidName);
+
+                var pH = -Math.log10(acidConcentration);
+                resultElement.textContent = "Kết quả độ pH có trong acid: " + pH.toFixed(2);
+
+                acidStrengthElement.textContent = "Độ mạnh của dung dịch acid: " + (isStrongAcid ? "mạnh" : "yếu");
+                neutralizeElement.textContent = "Loại base tác dụng để trung hòa: " + (isStrongAcid ? "base mạnh" : "mọi loại base");
+
+                var baseConcentrations = [0.1, 0.5, 1];
+
+                // Display divalent base information first
+                baseConcentrations.forEach(function(concentration) {
+                    var volume1 = (acidConcentration * acidVolume) / concentration;
+                    if (volume1 > 0) {
+                        concentrationVolumeElement.innerHTML += "<p>Nồng độ của base hóa trị 1: " + concentration.toFixed(1) + " M, Thể tích: " + volume1.toFixed(2) + " L</p>";
+                    }
+                });
+
+                // Display monovalent base information next
+                baseConcentrations.forEach(function(concentration) {
+                    var volume2 = (acidConcentration * acidVolume) / (2 * concentration);
+                    if (volume2 > 0) {
+                        concentrationVolumeElement.innerHTML += "<p>Nồng độ của base hóa trị 2: " + concentration.toFixed(1) + " M, Thể tích: " + volume2.toFixed(2) + " L</p>";
+                    }
+                });
+            }
+        </script>
+    </section>
+
+    <footer>
+        <p>&copy; KOK - Cùng bạn tìm hiểu thế giới bằng các thuật toán hoá học. HVT-TNK</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="BioCheX.png" type="image/x-icon">
+    <title>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</title>
+    <link rel="stylesheet" href="btester.css">
+</head>
+<body>
+    <header>
+        <h1>BioCheX - Khám Phá Thế Giới qua Hoá Sinh</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Trang chủ</a></li>
+            </ul>
+            <marquee behavior="alternate">
+                <marquee style="color:#ffffff; font-weight:bold" width="700px">I LOVE CHEMISTRY - HOÁ HỌC ĐƯA ĐẾN TƯƠNG LAI</marquee>
+            </marquee>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="quiz">
+            <h2>Câu hỏi</h2>
+            <form id="quiz-form">
+                <!-- Câu hỏi sẽ được hiển thị ở đây -->
+            </form>
+            <button id="next-submit-btn" onclick="submitAnswer()">Nộp bài</button>
+        </section>
+
+        <section id="question-list">
+            <h2>Danh sách câu hỏi</h2>
+            <ul id="question-navigation">
+                <!-- Số câu hỏi sẽ được thêm vào đây -->
+            </ul>
+        </section>
+
+        <section id="results" style="display: none;">
+            <h2>Kết quả</h2>
+            <div id="score"></div>
+            <div id="correct-answers"></div>
+            <div id="incorrect-answers"></div>
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhkNvC9P6pIqkHU2tDhRbPnV3Y36m7NdjiR5GVopADP9PkCHn7E0Mxs2grIyEZ7R66txHJFlQsEg1cNMsuubQ-h0EBUoUtQJ_nlHLc6MAPOiUeZSuDmPATHgLcFG-w3989IWawhrEwoV7bMrRSMmJQmmvcWs0Gdt7nZ2fQmBBRbdFQO7CTOO4XK9Tj7dA/s940/B%E1%BA%A3n%20sao%20c%E1%BB%A7a%20Ngh%C4%A9%20kh%C3%A1c%20%C4%91i%20(B%C3%A0i%20%C4%91%C4%83ng%20Facebook)%20(16).png" alt="Congratulations Image" id="congratulations-image">
+
+            <button onclick="restartQuiz()">Làm lại</button>
+        </section>
+    </main>
+
+    <footer>
+        <ul>
+            <p>BioCheX - Hoá Sinh trong đời sống. HVT-TNK</p>
+        </ul>
+    </footer>
+    <script>
+        // Dữ liệu về các câu hỏi và đáp án
+        const questions = [
+    {
+        question: "Nguyên liệu nào sau đây thường được sử dụng để hấp thụ các hóa chất độc hại trong quá trình lọc nước?",
+        answers: [
+            { text: "Sỏi", correct: false },
+            { text: "Cát", correct: false },
+            { text: "Than hoạt tính", correct: true },
+            { text: "Gạch vụn", correct: false }
+        ],
+        explanation: "Than hoạt tính có cấu trúc xốp với diện tích bề mặt lớn, giúp hấp thụ các hóa chất độc hại, mùi, và các chất ô nhiễm khác trong nước."
+    },
+    {
+        question: "Cát được sử dụng trong hệ thống lọc nước nhằm mục đích gì?",
+        answers: [
+            { text: "Loại bỏ vi khuẩn", correct: false },
+            { text: "Hấp thụ hóa chất", correct: false },
+            { text: "Lọc các hạt bẩn lớn", correct: true },
+            { text: "Tạo vị ngon cho nước", correct: false }
+        ],
+        explanation: "Cát hoạt động như một lớp lọc cơ học, giúp giữ lại các hạt bẩn lớn như cát, bụi, và các chất rắn không tan trong nước."
+    },
+    {
+        question: "Than hoạt tính có khả năng đặc biệt nào trong việc lọc nước?",
+        answers: [
+            { text: "Hấp thụ các chất ô nhiễm", correct: true },
+            { text: "Diệt khuẩn", correct: false },
+            { text: "Loại bỏ muối khoáng", correct: false },
+            { text: "Tạo lớp thoát nước", correct: false }
+        ],
+        explanation: "Than hoạt tính có khả năng hấp thụ các tạp chất hữu cơ, hóa chất và mùi vị không mong muốn trong nước, giúp nước trở nên sạch hơn và an toàn hơn để uống."
+    },
+    {
+        question: "Lớp sỏi trong hệ thống lọc nước có vai trò gì?",
+        answers: [
+            { text: "Hấp thụ chất độc hại", correct: false },
+            { text: "Tạo lớp thoát nước", correct: true },
+            { text: "Diệt vi khuẩn", correct: false },
+            { text: "Lọc các hạt nhỏ", correct: false }
+        ],
+        explanation: "Sỏi được đặt ở dưới cùng của hệ thống lọc để tạo lớp thoát nước, ngăn ngừa tắc nghẽn và hỗ trợ quá trình thoát nước sau khi đã qua các lớp lọc khác."
+    },
+    {
+        question: "Nguyên liệu nào sau đây có cấu trúc xốp, giúp lọc các hạt bẩn nhỏ trong nước?",
+        answers: [
+            { text: "Vải", correct: false },
+            { text: "Đá nham thạch", correct: true },
+            { text: "Sỏi than", correct: false },
+            { text: "Vỏ trấu", correct: false }
+        ],
+        explanation: "Đá nham thạch có cấu trúc xốp tự nhiên, giúp loại bỏ các hạt bẩn nhỏ và tạp chất ra khỏi nước, cải thiện độ trong và chất lượng nước."
+    },
+    {
+        question: "Vải hoặc bông gòn trong bình lọc nước có chức năng gì?",
+        answers: [
+            { text: "Lọc các hạt bẩn lớn", correct: true },
+            { text: "Ngăn ngừa tắc nghẽn", correct: true },
+            { text: "Hấp thụ hóa chất", correct: false },
+            { text: "vừa lọc các hạt bẩn vừa ngăn ngừa tắc nghẽn", correct: true }
+        ],
+        explanation: "Vải hoặc bông gòn giúp lọc các hạt bẩn lớn và ngăn ngừa tắc nghẽn trong các lớp lọc tiếp theo, đảm bảo nước chảy đều qua hệ thống lọc."
+    },
+    {
+        question: "Nguyên liệu nào có khả năng tiêu diệt vi khuẩn trong quá trình lọc nước?",
+        answers: [
+            { text: "Cột lọc UV", correct: true },
+            { text: "Than hoạt tính", correct: false },
+            { text: "Sỏi", correct: false },
+            { text: "Vải lọc", correct: false }
+        ],
+        explanation: "Cột lọc UV sử dụng ánh sáng tia cực tím (UV) để tiêu diệt vi khuẩn, virus và các vi sinh vật khác trong nước, đảm bảo nước an toàn để uống."
+    },
+    {
+        question: "Vỏ quả dừa được sử dụng trong lọc nước để làm gì?",
+        answers: [
+            { text: "Lọc các hạt bẩn lớn", correct: false },
+            { text: "Hấp thụ vi khuẩn", correct: false },
+            { text: "Hấp thụ các chất ô nhiễm", correct: true },
+            { text: "Tạo lớp thoát nước", correct: false }
+        ],
+        explanation: "Vỏ quả dừa, sau khi được xử lý, có thể hoạt động như một lớp lọc tự nhiên, hấp thụ các chất ô nhiễm và tạp chất trong nước."
+    },
+    {
+        question: "Tại sao vỏ trấu được sử dụng trong lọc nước?",
+        answers: [
+            { text: "Hấp thụ các hóa chất độc hại", correct: false },
+            { text: "Cải thiện độ trong của nước", correct: true },
+            { text: "Loại bỏ kim loại nặng", correct: false },
+            { text: "Diệt vi khuẩn", correct: false }
+        ],
+        explanation: "Vỏ trấu có khả năng hấp thụ các chất ô nhiễm nhỏ, giúp cải thiện độ trong của nước và loại bỏ các hạt nhỏ mà các lớp lọc khác không thể xử lý."
+    },
+    {
+        question: "Nguyên liệu nào giúp lọc nước khỏi các tạp chất hữu cơ và hóa chất hữu cơ dễ bay hơi (VOC)?",
+        answers: [
+            { text: "Gạch vụn", correct: false },
+            { text: "Sỏi than", correct: true },
+            { text: "Cát", correct: false },
+            { text: "Vải lọc", correct: false }
+        ],
+        explanation: "Sỏi than (anthracite) là một loại than đá tự nhiên, có khả năng loại bỏ các chất hữu cơ và VOC, giúp nước trở nên sạch và an toàn hơn."
+    },
+    {
+        question: "Để loại bỏ các chất hữu cơ, bạn nên sử dụng loại nguyên liệu nào trong hệ thống lọc nước?",
+        answers: [
+            { text: "Vải lọc", correct: false },
+            { text: "Than hoạt tính", correct: true },
+            { text: "Đá nham thạch", correct: false },
+            { text: "Sỏi", correct: false }
+        ],
+        explanation: "Than hoạt tính có khả năng hấp thụ và loại bỏ các chất hữu cơ có trong nước, giúp cải thiện chất lượng nước."
+    },
+    {
+        question: "Tại sao nên sử dụng nhiều lớp nguyên liệu trong bình lọc nước?",
+        answers: [
+            { text: "Để tăng cường khả năng lọc", correct: true },
+            { text: "Để nước có vị ngon hơn", correct: false },
+            { text: "Để giảm chi phí", correct: false },
+            { text: "Để giảm lượng nước sử dụng", correct: false }
+        ],
+        explanation: "Sử dụng nhiều lớp nguyên liệu giúp loại bỏ các tạp chất ở nhiều mức độ khác nhau, từ hạt lớn đến vi khuẩn, đảm bảo nước lọc ra đạt chất lượng cao nhất."
+    },
+    {
+        question: "Cột lọc UV được sử dụng để tiêu diệt loại sinh vật nào?",
+        answers: [
+            { text: "Vi khuẩn và virus", correct: true },
+            { text: "Các hạt bụi lớn", correct: false },
+            { text: "Các chất hữu cơ", correct: false },
+            { text: "Kim loại nặng", correct: false }
+        ],
+        explanation: "Cột lọc UV sử dụng ánh sáng cực tím để tiêu diệt vi khuẩn, virus và các vi sinh vật khác, làm cho nước an toàn hơn để uống."
+    },
+    {
+        question: "Loại đá nào sau đây có thể được sử dụng để lọc nước?",
+        answers: [
+            { text: "Đá vôi", correct: false },
+            { text: "Đá nham thạch", correct: true },
+            { text: "Đá hoa cương", correct: false },
+            { text: "Đá cẩm thạch", correct: false }
+        ],
+        explanation: "Đá nham thạch có cấu trúc xốp, giúp loại bỏ các tạp chất nhỏ trong nước, thường được sử dụng trong hệ thống lọc nước để cải thiện chất lượng nước."
+    },
+    {
+        question: "Nguyên liệu nào được sử dụng để tạo lớp thoát nước trong hệ thống lọc?",
+        answers: [
+            { text: "Than hoạt tính", correct: false },
+            { text: "Cát", correct: false },
+            { text: "Sỏi", correct: true },
+            { text: "Vải lọc", correct: false }
+        ],
+        explanation: "Sỏi tạo ra một lớp thoát nước hiệu quả, giúp nước chảy qua hệ thống lọc mà không bị tắc nghẽn và giúp loại bỏ các hạt lớn."
+    },
+    {
+        question: "Trong một hệ thống lọc nước, mục đích của lớp cát là gì?",
+        answers: [
+            { text: "Lọc các hạt lớn và bẩn", correct: true },
+            { text: "Hấp thụ hóa chất độc hại", correct: false },
+            { text: "Tiêu diệt vi khuẩn", correct: false },
+            { text: "Tạo lớp thoát nước", correct: false }
+        ],
+        explanation: "Lớp cát giúp lọc các hạt bẩn lớn và cặn trong nước, bảo đảm rằng các lớp lọc tiếp theo hoạt động hiệu quả hơn."
+    },
+    {
+        question: "Nguyên liệu nào sau đây không phải là một phần của hệ thống lọc nước thông thường?",
+        answers: [
+            { text: "Sỏi", correct: false },
+            { text: "Than hoạt tính", correct: false },
+            { text: "Đá nham thạch", correct: false },
+            { text: "Nhựa tổng hợp", correct: true }
+        ],
+        explanation: "Nhựa tổng hợp không phải là một phần của hệ thống lọc nước thông thường; thay vào đó, các nguyên liệu như sỏi, than hoạt tính và đá nham thạch thường được sử dụng."
+    },
+    {
+        question: "Sử dụng cột lọc UV trong hệ thống lọc nước giúp đạt được điều gì?",
+        answers: [
+            { text: "Loại bỏ các tạp chất rắn", correct: false },
+            { text: "Tiêu diệt vi khuẩn và virus", correct: true },
+            { text: "Hấp thụ các hóa chất độc hại", correct: false },
+            { text: "Lọc các hạt bẩn lớn", correct: false }
+        ],
+        explanation: "Cột lọc UV giúp tiêu diệt vi khuẩn và virus trong nước, đảm bảo nước an toàn để uống bằng cách sử dụng ánh sáng UV để diệt khuẩn."
+    },
+    {
+        question: "Lớp than hoạt tính thường được đặt ở đâu trong hệ thống lọc nước?",
+        answers: [
+            { text: "Trên cùng", correct: false },
+            { text: "Giữa các lớp khác", correct: true },
+            { text: "Dưới cùng", correct: false },
+            { text: "Ngoài hệ thống lọc", correct: false }
+        ],
+        explanation: "Lớp than hoạt tính thường được đặt ở giữa các lớp lọc khác để hấp thụ các tạp chất hữu cơ và hóa chất, đảm bảo nước sạch và an toàn hơn."
+    },
+    {
+        question: "Cát thường được sử dụng trong hệ thống lọc nước để loại bỏ loại tạp chất nào?",
+        answers: [
+            { text: "Vi khuẩn", correct: false },
+            { text: "Hóa chất độc hại", correct: false },
+            { text: "Hạt bẩn lớn", correct: true },
+            { text: "Kim loại nặng", correct: false }
+        ],
+        explanation: "Cát hoạt động như một lớp lọc cơ học, giữ lại các hạt bẩn lớn và cặn, giúp nước sạch hơn trước khi đi qua các lớp lọc khác."
+    },
+    {
+        question: "Tại sao hệ thống lọc nước cần phải bảo trì thường xuyên?",
+        answers: [
+            { text: "Để đảm bảo hiệu suất lọc tốt nhất", correct: true },
+            { text: "Để giảm chi phí điện năng", correct: false },
+            { text: "Để thay đổi hương vị của nước", correct: false },
+            { text: "Để tăng cường áp suất nước", correct: false }
+        ],
+        explanation: "Bảo trì thường xuyên hệ thống lọc nước là cần thiết để đảm bảo rằng các lớp lọc hoạt động hiệu quả, giữ cho nước sạch và an toàn để uống."
+    }
+];
+
+let currentQuestionIndex = 0;
+        let score = 0;
+        const userAnswers = [];
+
+        const quizForm = document.getElementById('quiz-form');
+        const resultsSection = document.getElementById('results');
+        const scoreDisplay = document.getElementById('score');
+        const correctAnswersDisplay = document.getElementById('correct-answers');
+        const incorrectAnswersDisplay = document.getElementById('incorrect-answers');
+        const nextSubmitBtn = document.getElementById('next-submit-btn');
+        const questionNavigation = document.getElementById('question-navigation');
+
+        // Hàm để bắt đầu trò chơi
+        function startQuiz() {
+            showQuestion();
+            createQuestionNavigation();
+        }
+
+        // Hàm để hiển thị câu hỏi hiện tại
+        function showQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            quizForm.innerHTML = `
+                <h2>${currentQuestion.question}</h2>
+                ${currentQuestion.answers.map((answer, index) => `
+                    <p><input type="radio" id="option${index + 1}" name="question" value="${answer.text}">
+                    <label for="option${index + 1}">${answer.text}</label></p>
+                `).join('')}`;
+
+            if (currentQuestionIndex === questions.length - 1) {
+                nextSubmitBtn.textContent = "Nộp bài";
+            } else {
+                nextSubmitBtn.textContent = "Tiếp theo";
+            }
+
+            updateQuestionNavigation();
+        }
+
+        // Hàm để kiểm tra câu trả lời và chuyển sang câu hỏi tiếp theo
+        function submitAnswer() {
+            const selectedAnswer = document.querySelector('input[name="question"]:checked');
+            if (selectedAnswer) {
+                const currentQuestion = questions[currentQuestionIndex];
+                userAnswers[currentQuestionIndex] = selectedAnswer.value;
+
+                if (currentQuestion.answers.find(answer => answer.text === selectedAnswer.value && answer.correct)) {
+                    score++;
+                }
+
+                currentQuestionIndex++;
+
+                if (currentQuestionIndex < questions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            } else {
+                alert('Vui lòng chọn một đáp án.');
+            }
+        }
+
+        // Hàm để hiển thị kết quả
+        function showResults() {
+    quizForm.style.display = 'none';
+    resultsSection.style.display = 'block';
+
+    scoreDisplay.textContent = `Bạn đã trả lời đúng ${score}/${questions.length} câu.`;
+    
+    correctAnswersDisplay.innerHTML = '<h3>Các câu trả lời đúng:</h3>' + questions.map((question, index) => {
+        const correctAnswer = question.answers.find(answer => answer.correct).text;
+        return `<p><strong>${index + 1}. ${question.question}</strong><br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+    }).join('');
+    
+    incorrectAnswersDisplay.innerHTML = '<h3>Các câu trả lời sai:</h3>' + questions.map((question, index) => {
+        if (!question.answers.find(answer => answer.text === userAnswers[index] && answer.correct)) {
+            const correctAnswer = question.answers.find(answer => answer.correct).text;
+            return `<p style="color: red;"><strong>${index + 1}. ${question.question}</strong><br>Đáp án của bạn: ${userAnswers[index]}<br>Đáp án đúng: ${correctAnswer}<br>${question.explanation}</p>`;
+        }
+        return '';
+    }).join('');
+}
+
+
+        // Hàm để tạo danh sách câu hỏi
+        function createQuestionNavigation() {
+            questionNavigation.innerHTML = '';
+            for (let i = 0; i < questions.length; i++) {
+                const questionLink = document.createElement('li');
+                questionLink.textContent = i + 1;
+                questionLink.onclick = () => goToQuestion(i);
+                questionNavigation.appendChild(questionLink);
+            }
+        }
+
+        // Hàm để cập nhật danh sách câu hỏi
+        function updateQuestionNavigation() {
+            const questionLinks = questionNavigation.children;
+            for (let i = 0; i < questionLinks.length; i++) {
+                if (userAnswers[i] !== undefined) {
+                    questionLinks[i].style.backgroundColor = 'green';
+                    questionLinks[i].style.color = 'white';
+                } else {
+                    questionLinks[i].style.backgroundColor = 'transparent';
+                    questionLinks[i].style.color = 'black';
+                }
+            }
+        }
+
+        // Hàm để chuyển đến câu hỏi cụ thể
+        function goToQuestion(index) {
+            currentQuestionIndex = index;
+            showQuestion();
+        }
+
+        // Hàm để làm lại bài kiểm tra
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers.length = 0;
+            quizForm.style.display = 'block';
+            resultsSection.style.display = 'none';
+            startQuiz();
+        }
+
+        // Bắt đầu trò chơi
+        startQuiz();
+    </script>
+</body>
+</html>
